@@ -1,0 +1,786 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Citizen Dashboard | EcoTrack</title>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: Arial, sans-serif;
+        }
+
+        body {
+            background: #f4f8f5;
+            color: #1f2937;
+        }
+
+        .layout {
+            display: flex;
+            min-height: 100vh;
+        }
+
+        /* SIDEBAR */
+
+        .sidebar {
+            width: 250px;
+            background: #14532d;
+            color: white;
+            padding: 25px 18px;
+            position: fixed;
+            height: 100vh;
+            left: 0;
+            top: 0;
+        }
+
+        .logo {
+            text-align: center;
+            margin-bottom: 35px;
+        }
+
+        .logo h2 {
+            font-size: 25px;
+        }
+
+        .logo p {
+            font-size: 12px;
+            color: #bbf7d0;
+            margin-top: 5px;
+        }
+
+        .menu {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .menu button {
+            width: 100%;
+            border: none;
+            background: transparent;
+            color: white;
+            padding: 13px 15px;
+            border-radius: 10px;
+            text-align: left;
+            font-size: 15px;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+
+        .menu button:hover {
+            background: #166534;
+        }
+
+        .logout {
+            position: absolute;
+            bottom: 25px;
+            left: 18px;
+            width: calc(100% - 36px);
+            padding: 12px;
+            border: none;
+            border-radius: 10px;
+            background: #dc2626;
+            color: white;
+            cursor: pointer;
+            font-size: 15px;
+        }
+
+        .logout:hover {
+            background: #b91c1c;
+        }
+
+        /* MAIN */
+
+        .main {
+            margin-left: 250px;
+            width: calc(100% - 250px);
+            padding: 30px;
+        }
+
+        .topbar {
+            background: white;
+            border-radius: 15px;
+            padding: 20px 25px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.05);
+            margin-bottom: 25px;
+        }
+
+        .topbar h1 {
+            font-size: 25px;
+            color: #14532d;
+        }
+
+        .user-info {
+            text-align: right;
+        }
+
+        .user-info strong {
+            display: block;
+        }
+
+        .user-info span {
+            font-size: 13px;
+            color: #6b7280;
+        }
+
+        /* WELCOME */
+
+        .welcome {
+            background: linear-gradient(135deg, #166534, #22c55e);
+            color: white;
+            padding: 30px;
+            border-radius: 18px;
+            margin-bottom: 25px;
+        }
+
+        .welcome h2 {
+            font-size: 27px;
+            margin-bottom: 8px;
+        }
+
+        .welcome p {
+            color: #dcfce7;
+        }
+
+        /* STATS */
+
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 18px;
+            margin-bottom: 30px;
+        }
+
+        .stat-card {
+            background: white;
+            padding: 22px;
+            border-radius: 15px;
+            box-shadow: 0 5px 18px rgba(0,0,0,0.05);
+        }
+
+        .stat-card .icon {
+            font-size: 30px;
+            margin-bottom: 10px;
+        }
+
+        .stat-card h3 {
+            font-size: 26px;
+            color: #14532d;
+        }
+
+        .stat-card p {
+            color: #6b7280;
+            margin-top: 5px;
+        }
+
+        /* QUICK ACTIONS */
+
+        .section {
+            margin-bottom: 30px;
+        }
+
+        .section-title {
+            margin-bottom: 15px;
+        }
+
+        .section-title h2 {
+            color: #14532d;
+            margin-bottom: 5px;
+        }
+
+        .section-title p {
+            color: #6b7280;
+            font-size: 14px;
+        }
+
+        .actions {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 18px;
+        }
+
+        .action-card {
+            background: white;
+            border-radius: 15px;
+            padding: 25px 18px;
+            text-align: center;
+            box-shadow: 0 5px 18px rgba(0,0,0,0.05);
+            cursor: pointer;
+            transition: 0.2s;
+        }
+
+        .action-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.08);
+        }
+
+        .action-card .big-icon {
+            font-size: 38px;
+            margin-bottom: 12px;
+        }
+
+        .action-card h3 {
+            color: #14532d;
+            margin-bottom: 7px;
+        }
+
+        .action-card p {
+            font-size: 13px;
+            color: #6b7280;
+            line-height: 1.5;
+        }
+
+        /* ECO POINTS */
+
+        .eco-box {
+            background: white;
+            border-radius: 16px;
+            padding: 25px;
+            box-shadow: 0 5px 18px rgba(0,0,0,0.05);
+            display: flex;
+            align-items: center;
+            gap: 25px;
+        }
+
+        .points {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            background: #dcfce7;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+            color: #166534;
+        }
+
+        .points strong {
+            font-size: 25px;
+        }
+
+        .points span {
+            font-size: 12px;
+        }
+
+        .eco-text h3 {
+            color: #14532d;
+            margin-bottom: 8px;
+        }
+
+        .eco-text p {
+            color: #6b7280;
+            font-size: 14px;
+        }
+
+        /* RESPONSIVE */
+
+        @media(max-width: 1000px) {
+
+            .actions {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .stats {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media(max-width: 700px) {
+
+            .sidebar {
+                width: 100%;
+                height: auto;
+                position: relative;
+            }
+
+            .layout {
+                display: block;
+            }
+
+            .logo {
+                margin-bottom: 15px;
+            }
+
+            .menu {
+                display: grid;
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .logout {
+                position: static;
+                width: 100%;
+                margin-top: 15px;
+            }
+
+            .main {
+                margin-left: 0;
+                width: 100%;
+                padding: 15px;
+            }
+
+            .topbar {
+                display: block;
+            }
+
+            .user-info {
+                text-align: left;
+                margin-top: 10px;
+            }
+
+            .stats {
+                grid-template-columns: 1fr;
+            }
+
+            .actions {
+                grid-template-columns: 1fr;
+            }
+
+            .eco-box {
+                flex-direction: column;
+                text-align: center;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="layout">
+
+    <!-- SIDEBAR -->
+
+    <aside class="sidebar">
+
+        <div class="logo">
+            <h2>🌱 EcoTrack</h2>
+            <p>Smart Waste Management</p>
+        </div>
+
+        <div class="menu">
+
+            <button onclick="location.href='citizen.html'">
+                🏠 Dashboard
+            </button>
+
+            <button onclick="location.href='report.html'">
+                🗑️ Report Waste
+            </button>
+
+            <button onclick="location.href='pickup.html'">
+                🚛 Pickup Request
+            </button>
+
+            <button onclick="location.href='tracking.html'">
+                📍 Track Complaint
+            </button>
+
+            <button onclick="location.href='pickup-tracking.html'">
+                🚚 Pickup Tracking
+            </button>
+
+            <button onclick="location.href='awareness.html'">
+                🌿 Awareness
+            </button>
+
+            <button onclick="location.href='citizen-profile.html'">
+                👤 My Profile
+            </button>
+
+        </div>
+
+        <button class="logout" id="logoutBtn">
+            🚪 Logout
+        </button>
+
+    </aside>
+
+
+    <!-- MAIN -->
+
+    <main class="main">
+
+        <!-- TOPBAR -->
+
+        <div class="topbar">
+
+            <div>
+                <h1>Citizen Dashboard</h1>
+            </div>
+
+            <div class="user-info">
+                <strong id="userName">Loading...</strong>
+                <span id="userEmail">Loading...</span>
+            </div>
+
+        </div>
+
+
+        <!-- WELCOME -->
+
+        <div class="welcome">
+
+            <h2>Welcome, <span id="welcomeName">Citizen</span> 👋</h2>
+
+            <p>
+                Help make your community cleaner, greener and healthier.
+            </p>
+
+        </div>
+
+
+        <!-- STATS -->
+
+        <div class="stats">
+
+            <div class="stat-card">
+
+                <div class="icon">🗑️</div>
+
+                <h3 id="reportCount">0</h3>
+
+                <p>My Waste Reports</p>
+
+            </div>
+
+
+            <div class="stat-card">
+
+                <div class="icon">🚛</div>
+
+                <h3 id="pickupCount">0</h3>
+
+                <p>Pickup Requests</p>
+
+            </div>
+
+
+            <div class="stat-card">
+
+                <div class="icon">🌱</div>
+
+                <h3 id="ecoPoints">0</h3>
+
+                <p>Eco Points</p>
+
+            </div>
+
+        </div>
+
+
+        <!-- QUICK ACTIONS -->
+
+        <section class="section">
+
+            <div class="section-title">
+
+                <h2>Quick Actions</h2>
+
+                <p>
+                    Choose an action to manage your waste activities.
+                </p>
+
+            </div>
+
+
+            <div class="actions">
+
+                <div class="action-card"
+                     onclick="location.href='report.html'">
+
+                    <div class="big-icon">🗑️</div>
+
+                    <h3>Report Waste</h3>
+
+                    <p>
+                        Report garbage or waste problems in your area.
+                    </p>
+
+                </div>
+
+
+                <div class="action-card"
+                     onclick="location.href='pickup.html'">
+
+                    <div class="big-icon">🚛</div>
+
+                    <h3>Request Pickup</h3>
+
+                    <p>
+                        Schedule a waste pickup from your location.
+                    </p>
+
+                </div>
+
+
+                <div class="action-card"
+                     onclick="location.href='tracking.html'">
+
+                    <div class="big-icon">📍</div>
+
+                    <h3>Track Complaint</h3>
+
+                    <p>
+                        Check the current status of your waste report.
+                    </p>
+
+                </div>
+
+
+                <div class="action-card"
+                     onclick="location.href='pickup-tracking.html'">
+
+                    <div class="big-icon">🚚</div>
+
+                    <h3>Pickup Tracking</h3>
+
+                    <p>
+                        Check the status of your pickup request.
+                    </p>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <!-- ECO POINTS -->
+
+        <section class="section">
+
+            <div class="section-title">
+
+                <h2>🌱 Eco Points</h2>
+
+                <p>
+                    Earn points by helping keep your surroundings clean.
+                </p>
+
+            </div>
+
+
+            <div class="eco-box">
+
+                <div class="points">
+
+                    <strong id="ecoPointsLarge">0</strong>
+
+                    <span>POINTS</span>
+
+                </div>
+
+
+                <div class="eco-text">
+
+                    <h3>Keep Going! 🌍</h3>
+
+                    <p>
+                        Report waste issues, participate in clean-up
+                        activities and follow proper waste segregation
+                        to earn Eco Points.
+                    </p>
+
+                </div>
+
+            </div>
+
+        </section>
+
+    </main>
+
+</div>
+
+
+<!-- FIREBASE -->
+
+<script type="module">
+
+import { auth, db } from "./firebase.js";
+
+import {
+    onAuthStateChanged,
+    signOut
+} from "https://www.gstatic.com/firebasejs/12.0.0/firebase-auth.js";
+
+import {
+    ref,
+    get
+} from "https://www.gstatic.com/firebasejs/12.0.0/firebase-database.js";
+
+
+let currentUser = null;
+
+
+/* AUTH CHECK */
+
+onAuthStateChanged(auth, async (user) => {
+
+    if (!user) {
+
+        location.href = "login.html";
+
+        return;
+    }
+
+    currentUser = user;
+
+    document.getElementById("userEmail").textContent =
+        user.email || "";
+
+    try {
+
+        const userSnapshot =
+            await get(ref(db, "users/" + user.uid));
+
+        if (userSnapshot.exists()) {
+
+            const userData = userSnapshot.val();
+
+            const name =
+                userData.name || "Citizen";
+
+            document.getElementById("userName")
+                .textContent = name;
+
+            document.getElementById("welcomeName")
+                .textContent = name;
+
+        }
+
+        await loadDashboardData();
+
+    } catch (error) {
+
+        console.error(error);
+
+    }
+
+});
+
+
+/* LOAD DASHBOARD DATA */
+
+async function loadDashboardData() {
+
+    try {
+
+        let reportCount = 0;
+        let pickupCount = 0;
+        let points = 0;
+
+
+        /* REPORTS */
+
+        const reportsSnapshot =
+            await get(ref(db, "reports"));
+
+        if (reportsSnapshot.exists()) {
+
+            const reports =
+                reportsSnapshot.val();
+
+            Object.values(reports).forEach(report => {
+
+                if (report.userId === currentUser.uid) {
+
+                    reportCount++;
+
+                }
+
+            });
+
+        }
+
+
+        /* PICKUP REQUESTS */
+
+        const pickupSnapshot =
+            await get(ref(db, "pickupRequests"));
+
+        if (pickupSnapshot.exists()) {
+
+            const pickups =
+                pickupSnapshot.val();
+
+            Object.values(pickups).forEach(request => {
+
+                if (request.userId === currentUser.uid) {
+
+                    pickupCount++;
+
+                }
+
+            });
+
+        }
+
+
+        /* ECO POINTS */
+
+        const pointsSnapshot =
+            await get(ref(db, "ecoPoints/" + currentUser.uid));
+
+        if (pointsSnapshot.exists()) {
+
+            const pointData =
+                pointsSnapshot.val();
+
+            points = pointData.points || 0;
+
+        }
+
+
+        /* UPDATE UI */
+
+        document.getElementById("reportCount")
+            .textContent = reportCount;
+
+        document.getElementById("pickupCount")
+            .textContent = pickupCount;
+
+        document.getElementById("ecoPoints")
+            .textContent = points;
+
+        document.getElementById("ecoPointsLarge")
+            .textContent = points;
+
+
+    } catch (error) {
+
+        console.error("Dashboard error:", error);
+
+    }
+
+}
+
+
+/* LOGOUT */
+
+document.getElementById("logoutBtn")
+    .addEventListener("click", async () => {
+
+        try {
+
+            await signOut(auth);
+
+            location.href = "index.html";
+
+        } catch (error) {
+
+            console.error("Logout error:", error);
+
+        }
+
+    });
+
+</script>
+
+</body>
+</html>

@@ -1,0 +1,1202 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+<meta charset="UTF-8">
+
+<meta name="viewport"
+content="width=device-width, initial-scale=1.0">
+
+<title>EcoTrack | Report Waste</title>
+
+<style>
+
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:Arial,sans-serif;
+}
+
+body{
+    min-height:100vh;
+    background:linear-gradient(
+        135deg,
+        #e8f8ee,
+        #f7fff9
+    );
+    padding:25px;
+    color:#1f2937;
+}
+
+.container{
+    max-width:750px;
+    margin:auto;
+}
+
+.header{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    margin-bottom:25px;
+}
+
+.logo{
+    font-size:26px;
+    font-weight:bold;
+    color:#123c2b;
+}
+
+.logo span{
+    color:#35a854;
+}
+
+.back-btn{
+    border:none;
+    background:#123c2b;
+    color:white;
+    padding:10px 16px;
+    border-radius:9px;
+    cursor:pointer;
+}
+
+.card{
+    background:white;
+    padding:30px;
+    border-radius:20px;
+    box-shadow:0 8px 30px rgba(0,0,0,.08);
+}
+
+h1{
+    color:#123c2b;
+    margin-bottom:8px;
+}
+
+.subtitle{
+    color:#6b7280;
+    margin-bottom:25px;
+}
+
+.form-group{
+    margin-bottom:18px;
+}
+
+label{
+    display:block;
+    margin-bottom:7px;
+    font-weight:bold;
+}
+
+input,
+select,
+textarea{
+    width:100%;
+    padding:12px;
+    border:1px solid #d1d5db;
+    border-radius:9px;
+    outline:none;
+    font-size:15px;
+}
+
+input:focus,
+select:focus,
+textarea:focus{
+    border-color:#35a854;
+}
+
+textarea{
+    min-height:110px;
+    resize:vertical;
+}
+
+/* GPS */
+
+.gps-box{
+    background:#f0faf3;
+    border:1px solid #cdebd5;
+    padding:16px;
+    border-radius:12px;
+    margin-bottom:20px;
+}
+
+.gps-box p{
+    margin-top:7px;
+    line-height:1.5;
+    color:#555;
+}
+
+.gps-btn{
+    border:none;
+    background:#176b45;
+    color:white;
+    padding:12px 18px;
+    border-radius:9px;
+    cursor:pointer;
+    font-size:15px;
+    margin-top:10px;
+}
+
+.gps-btn:disabled{
+    background:#999;
+    cursor:not-allowed;
+}
+
+.gps-status{
+    margin-top:10px;
+    font-size:14px;
+    color:#555;
+    line-height:1.5;
+}
+
+.location-found{
+    color:#176b45;
+    font-weight:bold;
+}
+
+.location-error{
+    color:#c0392b;
+    font-weight:bold;
+}
+
+/* PHOTO */
+
+.photo-box{
+    background:#f8faf9;
+    border:1px dashed #a9cbb4;
+    padding:15px;
+    border-radius:12px;
+}
+
+.photo-preview{
+    display:none;
+    width:100%;
+    max-height:300px;
+    object-fit:contain;
+    margin-top:12px;
+    border-radius:10px;
+    border:1px solid #ddd;
+}
+
+/* SUBMIT */
+
+.submit-btn{
+    width:100%;
+    border:none;
+    background:#123c2b;
+    color:white;
+    padding:14px;
+    border-radius:10px;
+    font-size:16px;
+    font-weight:bold;
+    cursor:pointer;
+    margin-top:8px;
+}
+
+.submit-btn:disabled{
+    background:#999;
+    cursor:not-allowed;
+}
+
+/* MESSAGE */
+
+.message{
+    display:none;
+    padding:12px;
+    border-radius:9px;
+    margin-bottom:15px;
+    text-align:center;
+    font-size:14px;
+}
+
+.success{
+    display:block;
+    background:#e7f8ed;
+    color:#176b45;
+}
+
+.error{
+    display:block;
+    background:#fdecec;
+    color:#b42318;
+}
+
+/* MOBILE */
+
+@media(max-width:600px){
+
+    body{
+        padding:15px;
+    }
+
+    .card{
+        padding:20px;
+    }
+
+    .header{
+        gap:10px;
+    }
+
+    .logo{
+        font-size:22px;
+    }
+
+}
+
+</style>
+
+</head>
+
+<body>
+
+<div class="container">
+
+    <div class="header">
+
+        <div class="logo">
+            Eco<span>Track</span>
+        </div>
+
+        <button
+            class="back-btn"
+            onclick="location.href='citizen.html'"
+        >
+            ← Dashboard
+        </button>
+
+    </div>
+
+    <div class="card">
+
+        <h1>Report Waste</h1>
+
+        <p class="subtitle">
+            Report a waste problem and help keep
+            your area clean.
+        </p>
+
+        <div
+            id="message"
+            class="message"
+        ></div>
+
+        <form id="reportForm">
+
+            <!-- CATEGORY -->
+
+            <div class="form-group">
+
+                <label for="category">
+                    Waste Category
+                </label>
+
+                <select
+                    id="category"
+                    required
+                >
+
+                    <option value="">
+                        Select Category
+                    </option>
+
+                    <option value="Garbage">
+                        Garbage
+                    </option>
+
+                    <option value="Plastic Waste">
+                        Plastic Waste
+                    </option>
+
+                    <option value="Food Waste">
+                        Food Waste
+                    </option>
+
+                    <option value="E-Waste">
+                        E-Waste
+                    </option>
+
+                    <option value="Medical Waste">
+                        Medical Waste
+                    </option>
+
+                    <option value="Construction Waste">
+                        Construction Waste
+                    </option>
+
+                    <option value="Other">
+                        Other
+                    </option>
+
+                </select>
+
+            </div>
+
+            <!-- LOCATION -->
+
+            <div class="form-group">
+
+                <label for="location">
+                    Location / Address
+                </label>
+
+                <input
+                    type="text"
+                    id="location"
+                    placeholder="Enter waste location"
+                    required
+                >
+
+            </div>
+            <!-- GPS -->
+
+            <div class="gps-box">
+
+                <strong>
+                    📍 Current Location
+                </strong>
+
+                <p>
+                    Use your current GPS location
+                    to help the admin locate the
+                    waste problem accurately.
+                </p>
+
+                <button
+                    type="button"
+                    class="gps-btn"
+                    id="gpsBtn"
+                >
+                    📍 Use My Current Location
+                </button>
+
+                <div
+                    id="gpsStatus"
+                    class="gps-status"
+                >
+                    GPS location not selected.
+                </div>
+
+            </div>
+
+
+            <!-- DESCRIPTION -->
+
+            <div class="form-group">
+
+                <label for="description">
+                    Description
+                </label>
+
+                <textarea
+                    id="description"
+                    placeholder="Describe the waste problem..."
+                    required
+                ></textarea>
+
+            </div>
+
+
+            <!-- AREA -->
+
+            <div class="form-group">
+
+                <label for="area">
+                    Area
+                </label>
+
+                <input
+                    type="text"
+                    id="area"
+                    placeholder="Enter area/locality"
+                    required
+                >
+
+            </div>
+
+
+            <!-- SEVERITY -->
+
+            <div class="form-group">
+
+                <label for="severity">
+                    Severity
+                </label>
+
+                <select
+                    id="severity"
+                    required
+                >
+
+                    <option value="">
+                        Select Severity
+                    </option>
+
+                    <option value="Low">
+                        Low
+                    </option>
+
+                    <option value="Medium">
+                        Medium
+                    </option>
+
+                    <option value="High">
+                        High
+                    </option>
+
+                    <option value="Critical">
+                        Critical
+                    </option>
+
+                </select>
+
+            </div>
+
+
+            <!-- PHOTO -->
+
+            <div class="form-group">
+
+                <label for="photo">
+                    Waste Photo
+                </label>
+
+                <div class="photo-box">
+
+                    <input
+                        type="file"
+                        id="photo"
+                        accept="image/*"
+                    >
+
+                    <img
+                        id="photoPreview"
+                        class="photo-preview"
+                        alt="Waste Photo Preview"
+                    >
+
+                </div>
+
+            </div>
+
+
+            <!-- SUBMIT -->
+
+            <button
+                type="submit"
+                class="submit-btn"
+                id="submitBtn"
+            >
+                🚀 Submit Waste Report
+            </button>
+
+        </form>
+
+    </div>
+
+</div>
+
+
+<script type="module">
+    /* ================= FIREBASE ================= */
+
+import {
+    auth,
+    db
+} from "./firebase.js";
+
+import {
+    onAuthStateChanged
+} from "https://www.gstatic.com/firebasejs/12.0.0/firebase-auth.js";
+
+import {
+    ref,
+    push,
+    set,
+    get,
+    update
+} from "https://www.gstatic.com/firebasejs/12.0.0/firebase-database.js";
+
+
+/* ================= ELEMENTS ================= */
+
+const reportForm =
+    document.getElementById("reportForm");
+
+const gpsBtn =
+    document.getElementById("gpsBtn");
+
+const gpsStatus =
+    document.getElementById("gpsStatus");
+
+const submitBtn =
+    document.getElementById("submitBtn");
+
+const message =
+    document.getElementById("message");
+
+const photoInput =
+    document.getElementById("photo");
+
+const photoPreview =
+    document.getElementById("photoPreview");
+
+
+/* ================= VARIABLES ================= */
+
+let currentUser = null;
+
+let latitude = null;
+
+let longitude = null;
+
+let locationSource = "";
+
+
+/* ================= LOGIN CHECK ================= */
+
+onAuthStateChanged(
+    auth,
+    (user) => {
+
+        if (!user) {
+
+            window.location.href =
+                "login.html";
+
+            return;
+        }
+
+        currentUser = user;
+
+        console.log(
+            "Logged in UID:",
+            user.uid
+        );
+
+    }
+);
+
+
+/* ================= PHOTO PREVIEW ================= */
+
+photoInput.addEventListener(
+    "change",
+    () => {
+
+        const file =
+            photoInput.files[0];
+
+        if (!file) {
+
+            photoPreview.style.display =
+                "none";
+
+            photoPreview.src = "";
+
+            return;
+        }
+
+
+        if (
+            !file.type.startsWith("image/")
+        ) {
+
+            showMessage(
+                "Please select a valid image.",
+                "error"
+            );
+
+            photoInput.value = "";
+
+            return;
+        }
+
+
+        const reader =
+            new FileReader();
+
+
+        reader.onload =
+            function(event) {
+
+                photoPreview.src =
+                    event.target.result;
+
+                photoPreview.style.display =
+                    "block";
+
+            };
+
+
+        reader.readAsDataURL(file);
+
+    }
+);
+
+
+/* ================= GPS ================= */
+
+gpsBtn.addEventListener(
+    "click",
+    () => {
+
+        if (!navigator.geolocation) {
+
+            gpsStatus.textContent =
+                "❌ GPS is not supported by this browser.";
+
+            gpsStatus.className =
+                "gps-status location-error";
+
+            return;
+        }
+
+
+        gpsBtn.disabled = true;
+
+        gpsBtn.textContent =
+            "📍 Getting Location...";
+
+
+        gpsStatus.textContent =
+            "Please allow location permission in your browser.";
+
+
+        navigator.geolocation.getCurrentPosition(
+
+            (position) => {
+
+                latitude =
+                    position.coords.latitude;
+
+                longitude =
+                    position.coords.longitude;
+
+                locationSource =
+                    "gps";
+
+
+                gpsStatus.innerHTML =
+                    "✅ Location captured successfully!<br>" +
+                    "Latitude: " +
+                    latitude.toFixed(6) +
+                    "<br>" +
+                    "Longitude: " +
+                    longitude.toFixed(6);
+
+
+                gpsStatus.className =
+                    "gps-status location-found";
+
+
+                gpsBtn.disabled = false;
+
+                gpsBtn.textContent =
+                    "📍 Location Selected";
+
+            },
+
+
+            (error) => {
+
+                console.error(error);
+
+                latitude = null;
+
+                longitude = null;
+
+                locationSource = "";
+
+
+                gpsStatus.textContent =
+                    "❌ Unable to get your location. Please allow location permission and try again.";
+
+                gpsStatus.className =
+                    "gps-status location-error";
+
+
+                gpsBtn.disabled = false;
+
+                gpsBtn.textContent =
+                    "📍 Try Again";
+
+            },
+
+            {
+                enableHighAccuracy: true,
+                timeout: 15000,
+                maximumAge: 0
+            }
+
+        );
+
+    }
+);
+/* ================= FORM SUBMIT ================= */
+
+reportForm.addEventListener(
+    "submit",
+    async (e) => {
+
+        e.preventDefault();
+
+
+        if (!currentUser) {
+
+            showMessage(
+                "Please login first.",
+                "error"
+            );
+
+            return;
+        }
+
+
+        /* ================= FORM DATA ================= */
+
+        const category =
+            document.getElementById("category").value;
+
+        const location =
+            document.getElementById("location").value.trim();
+
+        const description =
+            document.getElementById("description").value.trim();
+
+        const area =
+            document.getElementById("area").value.trim();
+
+        const severity =
+            document.getElementById("severity").value;
+
+        const photo =
+            photoInput.files[0];
+
+
+        /* ================= GPS CHECK ================= */
+
+        if (
+            latitude === null ||
+            longitude === null
+        ) {
+
+            showMessage(
+                "Please select your current GPS location before submitting.",
+                "error"
+            );
+
+            return;
+        }
+
+
+        /* ================= BASIC VALIDATION ================= */
+
+        if (
+            !category ||
+            !location ||
+            !description ||
+            !area ||
+            !severity
+        ) {
+
+            showMessage(
+                "Please fill all required fields.",
+                "error"
+            );
+
+            return;
+        }
+
+
+        /* ================= BUTTON ================= */
+
+        submitBtn.disabled = true;
+
+        submitBtn.textContent =
+            "⏳ Submitting Report...";
+
+
+        try {
+
+            let imageData = "";
+
+            let imageName = "";
+
+
+            /* ================= PHOTO ================= */
+
+            if (photo) {
+
+                imageName =
+                    photo.name;
+
+                imageData =
+                    await compressImage(photo);
+
+            }
+
+
+            /* ================= REPORT DATA ================= */
+
+            const reportData = {
+
+                userId:
+                    currentUser.uid,
+
+                email:
+                    currentUser.email || "",
+
+                category:
+                    category,
+
+                location:
+                    location,
+
+                area:
+                    area,
+
+                description:
+                    description,
+
+                severity:
+                    severity,
+
+                imageName:
+                    imageName,
+
+                imageData:
+                    imageData,
+
+                latitude:
+                    latitude,
+
+                longitude:
+                    longitude,
+
+                locationSource:
+                    locationSource,
+
+                status:
+                    "Pending",
+
+                createdAt:
+                    new Date().toISOString()
+
+            };
+
+
+            /* ================= SAVE REPORT ================= */
+
+            const reportRef =
+                push(ref(db, "reports"));
+
+
+            await set(
+                reportRef,
+                reportData
+            );
+
+
+            /* ================= ECO POINTS ================= */
+
+            const pointsRef =
+                ref(
+                    db,
+                    "ecoPoints/" +
+                    currentUser.uid +
+                    "/points"
+                );
+
+
+            const pointsSnapshot =
+                await get(pointsRef);
+
+
+            let currentPoints = 0;
+
+
+            if (pointsSnapshot.exists()) {
+
+                currentPoints =
+                    Number(
+                        pointsSnapshot.val()
+                    ) || 0;
+
+            }
+
+
+            const newPoints =
+                currentPoints + 10;
+
+
+            await set(
+                pointsRef,
+                newPoints
+            );
+
+
+            /* ================= SUCCESS ================= */
+
+            showMessage(
+                "✅ Waste report submitted successfully! You earned +10 Eco Points.",
+                "success"
+            );
+
+
+            reportForm.reset();
+
+
+            latitude = null;
+
+            longitude = null;
+
+            locationSource = "";
+
+
+            photoPreview.src = "";
+
+            photoPreview.style.display =
+                "none";
+
+
+            gpsStatus.textContent =
+                "GPS location not selected.";
+
+            gpsStatus.className =
+                "gps-status";
+
+
+            gpsBtn.disabled = false;
+
+            gpsBtn.textContent =
+                "📍 Use My Current Location";
+
+
+            /* ================= REDIRECT ================= */
+
+            setTimeout(
+                () => {
+
+                    window.location.href =
+                        "tracking.html";
+
+                },
+                1800
+            );
+
+
+        } catch (error) {
+
+            console.error(
+                "Report Error:",
+                error
+            );
+
+
+            showMessage(
+                "Unable to submit report. Please try again.",
+                "error"
+            );
+
+
+            submitBtn.disabled = false;
+
+            submitBtn.textContent =
+                "🚀 Submit Waste Report";
+
+        }
+
+    }
+);
+
+
+/* ================= IMAGE COMPRESSION ================= */
+
+function compressImage(file) {
+
+    return new Promise(
+        (resolve, reject) => {
+
+            const reader =
+                new FileReader();
+
+
+            reader.onload =
+                (event) => {
+
+                    const img =
+                        new Image();
+
+
+                    img.onload =
+                        () => {
+
+                            const canvas =
+                                document.createElement(
+                                    "canvas"
+                                );
+
+
+                            const maxSize =
+                                800;
+
+
+                            let width =
+                                img.width;
+
+                            let height =
+                                img.height;
+
+
+                            /* Maintain aspect ratio */
+
+                            if (
+                                width > maxSize ||
+                                height > maxSize
+                            ) {
+
+                                if (
+                                    width > height
+                                ) {
+
+                                    height =
+                                        Math.round(
+                                            height *
+                                            maxSize /
+                                            width
+                                        );
+
+                                    width =
+                                        maxSize;
+
+                                } else {
+
+                                    width =
+                                        Math.round(
+                                            width *
+                                            maxSize /
+                                            height
+                                        );
+
+                                    height =
+                                        maxSize;
+
+                                }
+
+                            }
+
+
+                            canvas.width =
+                                width;
+
+                            canvas.height =
+                                height;
+
+
+                            const ctx =
+                                canvas.getContext(
+                                    "2d"
+                                );
+
+
+                            ctx.drawImage(
+                                img,
+                                0,
+                                0,
+                                width,
+                                height
+                            );
+
+
+                            const compressed =
+                                canvas.toDataURL(
+                                    "image/jpeg",
+                                    0.6
+                                );
+
+
+                            resolve(
+                                compressed
+                            );
+
+                        };
+
+
+                    img.onerror =
+                        () => {
+
+                            reject(
+                                new Error(
+                                    "Image loading failed"
+                                )
+                            );
+
+                        };
+
+
+                    img.src =
+                        event.target.result;
+
+                };
+
+
+            reader.onerror =
+                () => {
+
+                    reject(
+                        new Error(
+                            "File reading failed"
+                        )
+                    );
+
+                };
+
+
+            reader.readAsDataURL(file);
+
+        }
+    );
+
+}
+
+
+/* ================= MESSAGE ================= */
+
+function showMessage(
+    text,
+    type
+) {
+
+    message.textContent =
+        text;
+
+    message.className =
+        "message " + type;
+
+
+    window.scrollTo({
+        top: 0,
+        behavior: "smooth"
+    });
+
+
+    if (type === "success") {
+
+        setTimeout(
+            () => {
+
+                message.style.display =
+                    "none";
+
+            },
+            5000
+        );
+
+    }
+
+}
+</script>
+
+</body>
+
+</html>

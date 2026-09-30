@@ -1,0 +1,427 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Waste Awareness | EcoTrack</title>
+
+    <link rel="stylesheet" href="style.css">
+
+    <style>
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background: #f5faf7;
+            color: #26382f;
+        }
+
+        .awareness-page {
+            min-height: 100vh;
+            padding: 30px 20px;
+        }
+
+        .container {
+            max-width: 1050px;
+            margin: auto;
+        }
+
+        .header {
+            margin-bottom: 30px;
+        }
+
+        .back-link {
+            display: inline-block;
+            color: #28a66a;
+            text-decoration: none;
+            font-size: 14px;
+            margin-bottom: 18px;
+        }
+
+        .header h1 {
+            margin: 0 0 8px;
+            font-size: 30px;
+        }
+
+        .header p {
+            margin: 0;
+            color: #718078;
+            line-height: 1.5;
+        }
+
+        /* CATEGORY CARDS */
+
+        .categories {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 18px;
+            margin-bottom: 35px;
+        }
+
+        .category-card {
+            background: white;
+            padding: 25px;
+            border-radius: 16px;
+            border: 1px solid #e1ebe6;
+        }
+
+        .category-icon {
+            font-size: 38px;
+            margin-bottom: 12px;
+        }
+
+        .category-card h2 {
+            margin: 0 0 8px;
+            font-size: 19px;
+        }
+
+        .category-card p {
+            color: #718078;
+            font-size: 13px;
+            line-height: 1.6;
+            margin-bottom: 15px;
+        }
+
+        .category-card ul {
+            padding-left: 18px;
+            margin: 0;
+            color: #52645c;
+            font-size: 13px;
+            line-height: 1.8;
+        }
+
+        /* TIPS */
+
+        .section-title {
+            margin-bottom: 15px;
+        }
+
+        .section-title h2 {
+            margin: 0;
+            font-size: 22px;
+        }
+
+        .tips {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 18px;
+            margin-bottom: 35px;
+        }
+
+        .tip {
+            background: #eef9f3;
+            padding: 20px;
+            border-radius: 14px;
+        }
+
+        .tip strong {
+            display: block;
+            margin-bottom: 7px;
+        }
+
+        .tip p {
+            margin: 0;
+            color: #52645c;
+            font-size: 13px;
+            line-height: 1.5;
+        }
+
+        /* QUIZ */
+
+        .quiz {
+            background: white;
+            border: 1px solid #e1ebe6;
+            border-radius: 18px;
+            padding: 28px;
+            margin-bottom: 25px;
+        }
+
+        .quiz h2 {
+            margin-top: 0;
+        }
+
+        .quiz-question {
+            font-size: 16px;
+            font-weight: bold;
+            margin: 20px 0 12px;
+        }
+
+        .quiz-options {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 10px;
+        }
+
+        .quiz-options button {
+            padding: 12px;
+            border: 1px solid #d8e5de;
+            background: #fbfdfc;
+            border-radius: 9px;
+            cursor: pointer;
+            text-align: left;
+        }
+
+        .quiz-options button:hover {
+            border-color: #28a66a;
+            background: #eef9f3;
+        }
+
+        .quiz-result {
+            margin-top: 18px;
+            font-weight: bold;
+            color: #28a66a;
+        }
+
+        .dashboard-btn {
+            display: inline-block;
+            padding: 12px 18px;
+            background: #28a66a;
+            color: white;
+            text-decoration: none;
+            border-radius: 9px;
+            font-size: 14px;
+            font-weight: bold;
+        }
+
+        .dashboard-btn:hover {
+            background: #218b58;
+        }
+
+        @media (max-width: 800px) {
+            .categories,
+            .tips {
+                grid-template-columns: 1fr 1fr;
+            }
+        }
+
+        @media (max-width: 550px) {
+            .awareness-page {
+                padding: 20px 15px;
+            }
+
+            .header h1 {
+                font-size: 25px;
+            }
+
+            .categories,
+            .tips,
+            .quiz-options {
+                grid-template-columns: 1fr;
+            }
+
+            .quiz {
+                padding: 22px 18px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="awareness-page">
+
+    <div class="container">
+
+        <div class="header">
+
+            <a href="citizen.html" class="back-link">
+                ← Back to Dashboard
+            </a>
+
+            <h1>📚 Waste Awareness</h1>
+
+            <p>
+                Learn how to identify, separate and manage different types
+                of waste responsibly.
+            </p>
+
+        </div>
+
+
+        <!-- WASTE CATEGORIES -->
+
+        <div class="categories">
+
+            <div class="category-card">
+
+                <div class="category-icon">🥬</div>
+
+                <h2>Wet Waste</h2>
+
+                <p>
+                    Biodegradable waste that can naturally decompose.
+                </p>
+
+                <ul>
+                    <li>Food leftovers</li>
+                    <li>Vegetable peels</li>
+                    <li>Fruit waste</li>
+                    <li>Garden waste</li>
+                </ul>
+
+            </div>
+
+
+            <div class="category-card">
+
+                <div class="category-icon">📦</div>
+
+                <h2>Dry Waste</h2>
+
+                <p>
+                    Recyclable or reusable materials that should stay dry.
+                </p>
+
+                <ul>
+                    <li>Paper</li>
+                    <li>Cardboard</li>
+                    <li>Glass</li>
+                    <li>Metal containers</li>
+                </ul>
+
+            </div>
+
+
+            <div class="category-card">
+
+                <div class="category-icon">💻</div>
+
+                <h2>E-Waste</h2>
+
+                <p>
+                    Electronic items that need special handling.
+                </p>
+
+                <ul>
+                    <li>Old phones</li>
+                    <li>Computers</li>
+                    <li>Batteries</li>
+                    <li>Electronic devices</li>
+                </ul>
+
+            </div>
+
+        </div>
+
+
+        <!-- SMART TIPS -->
+
+        <div class="section-title">
+            <h2>🌱 Smart Waste Management Tips</h2>
+        </div>
+
+        <div class="tips">
+
+            <div class="tip">
+
+                <strong>♻️ Separate Waste</strong>
+
+                <p>
+                    Keep wet, dry and special waste separated before disposal.
+                </p>
+
+            </div>
+
+
+            <div class="tip">
+
+                <strong>🛍️ Reduce Plastic</strong>
+
+                <p>
+                    Prefer reusable bags and containers whenever possible.
+                </p>
+
+            </div>
+
+
+            <div class="tip">
+
+                <strong>🔋 Handle E-Waste Safely</strong>
+
+                <p>
+                    Do not mix batteries and electronic devices with normal waste.
+                </p>
+
+            </div>
+
+        </div>
+
+
+        <!-- QUIZ -->
+
+        <div class="quiz">
+
+            <h2>🧠 Waste Sorting Quiz</h2>
+
+            <p>
+                Test your knowledge of waste segregation.
+            </p>
+
+            <div class="quiz-question">
+                Where should a banana peel go?
+            </div>
+
+            <div class="quiz-options">
+
+                <button onclick="checkAnswer('wrong')">
+                    📦 Dry Waste
+                </button>
+
+                <button onclick="checkAnswer('correct')">
+                    🥬 Wet Waste
+                </button>
+
+                <button onclick="checkAnswer('wrong')">
+                    💻 E-Waste
+                </button>
+
+                <button onclick="checkAnswer('wrong')">
+                    🧴 Plastic Waste
+                </button>
+
+            </div>
+
+            <div
+                id="quizResult"
+                class="quiz-result"
+            ></div>
+
+        </div>
+
+
+        <a
+            href="citizen.html"
+            class="dashboard-btn"
+        >
+            ← Return to Dashboard
+        </a>
+
+    </div>
+
+</div>
+
+
+<script>
+
+    function checkAnswer(answer) {
+
+        const result = document.getElementById("quizResult");
+
+        if (answer === "correct") {
+
+            result.textContent =
+                "✅ Correct! Banana peel is biodegradable wet waste.";
+
+        } else {
+
+            result.textContent =
+                "❌ Not quite. Try again!";
+
+        }
+
+    }
+
+</script>
+
+</body>
+</html>

@@ -1,0 +1,922 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Pickup Tracking | EcoTrack</title>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: Arial, sans-serif;
+        }
+
+        body {
+            background: #f4f8f5;
+            color: #1f2937;
+        }
+
+        .layout {
+            display: flex;
+            min-height: 100vh;
+        }
+
+        /* SIDEBAR */
+
+        .sidebar {
+            width: 250px;
+            background: #14532d;
+            color: white;
+            padding: 25px 18px;
+            position: fixed;
+            left: 0;
+            top: 0;
+            height: 100vh;
+        }
+
+        .logo {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .logo h2 {
+            font-size: 25px;
+        }
+
+        .logo p {
+            font-size: 12px;
+            color: #bbf7d0;
+            margin-top: 5px;
+        }
+
+        .menu {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .menu button {
+            border: none;
+            background: transparent;
+            color: white;
+            padding: 12px 14px;
+            border-radius: 9px;
+            text-align: left;
+            cursor: pointer;
+            font-size: 14px;
+        }
+
+        .menu button:hover {
+            background: #166534;
+        }
+
+        .logout {
+            position: absolute;
+            bottom: 25px;
+            left: 18px;
+            width: calc(100% - 36px);
+            border: none;
+            padding: 12px;
+            border-radius: 9px;
+            background: #dc2626;
+            color: white;
+            cursor: pointer;
+        }
+
+        /* MAIN */
+
+        .main {
+            margin-left: 250px;
+            width: calc(100% - 250px);
+            padding: 30px;
+        }
+
+        .topbar {
+            background: white;
+            padding: 20px 25px;
+            border-radius: 15px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.05);
+            margin-bottom: 25px;
+        }
+
+        .topbar h1 {
+            color: #14532d;
+            margin-bottom: 5px;
+        }
+
+        .topbar p {
+            color: #6b7280;
+            font-size: 14px;
+        }
+
+        /* INFO */
+
+        .info-box {
+            background: linear-gradient(135deg, #166534, #22c55e);
+            color: white;
+            padding: 25px;
+            border-radius: 16px;
+            margin-bottom: 25px;
+        }
+
+        .info-box h2 {
+            margin-bottom: 8px;
+        }
+
+        .info-box p {
+            color: #dcfce7;
+        }
+
+        /* REQUEST CARD */
+
+        .request-card {
+            background: white;
+            border-radius: 16px;
+            padding: 25px;
+            margin-bottom: 20px;
+            box-shadow: 0 5px 18px rgba(0,0,0,0.05);
+        }
+
+        .request-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .request-header h3 {
+            color: #14532d;
+        }
+
+        .request-id {
+            font-size: 13px;
+            color: #6b7280;
+            margin-top: 5px;
+        }
+
+        /* STATUS */
+
+        .status {
+            padding: 8px 14px;
+            border-radius: 20px;
+            font-size: 13px;
+            font-weight: bold;
+            text-transform: capitalize;
+            white-space: nowrap;
+        }
+
+        .pending {
+            background: #fef3c7;
+            color: #92400e;
+        }
+
+        .scheduled {
+            background: #dbeafe;
+            color: #1e40af;
+        }
+
+        .picked-up {
+            background: #dcfce7;
+            color: #166534;
+        }
+
+        .rejected {
+            background: #fee2e2;
+            color: #991b1b;
+        }
+
+        /* DETAILS */
+
+        .details {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 15px;
+            margin-bottom: 25px;
+        }
+
+        .detail {
+            background: #f8fafc;
+            padding: 15px;
+            border-radius: 10px;
+        }
+
+        .detail span {
+            display: block;
+            color: #6b7280;
+            font-size: 12px;
+            margin-bottom: 5px;
+        }
+
+        .detail strong {
+            color: #1f2937;
+            font-size: 14px;
+        }
+
+        /* TIMELINE */
+
+        .timeline-title {
+            color: #14532d;
+            margin-bottom: 15px;
+        }
+
+        .timeline {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            position: relative;
+            margin-top: 20px;
+        }
+
+        .timeline::before {
+            content: "";
+            position: absolute;
+            top: 15px;
+            left: 8%;
+            right: 8%;
+            height: 3px;
+            background: #d1d5db;
+            z-index: 0;
+        }
+
+        .step {
+            position: relative;
+            z-index: 1;
+            text-align: center;
+            width: 25%;
+        }
+
+        .circle {
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            background: #d1d5db;
+            color: white;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin: auto;
+            font-size: 14px;
+        }
+
+        .step.active .circle {
+            background: #16a34a;
+        }
+
+        .step p {
+            margin-top: 8px;
+            font-size: 12px;
+            color: #6b7280;
+        }
+
+        .step.active p {
+            color: #166534;
+            font-weight: bold;
+        }
+
+        /* EMPTY */
+
+        .empty {
+            background: white;
+            border-radius: 16px;
+            padding: 50px 20px;
+            text-align: center;
+            box-shadow: 0 5px 18px rgba(0,0,0,0.05);
+        }
+
+        .empty .icon {
+            font-size: 50px;
+            margin-bottom: 15px;
+        }
+
+        .empty h2 {
+            color: #14532d;
+            margin-bottom: 8px;
+        }
+
+        .empty p {
+            color: #6b7280;
+            margin-bottom: 20px;
+        }
+
+        .request-btn {
+            border: none;
+            background: #16a34a;
+            color: white;
+            padding: 12px 20px;
+            border-radius: 9px;
+            cursor: pointer;
+        }
+
+        .request-btn:hover {
+            background: #15803d;
+        }
+
+        /* ERROR */
+
+        .message {
+            background: white;
+            padding: 25px;
+            border-radius: 15px;
+            text-align: center;
+            color: #6b7280;
+        }
+
+        /* MOBILE */
+
+        @media(max-width: 800px) {
+
+            .sidebar {
+                position: relative;
+                width: 100%;
+                height: auto;
+            }
+
+            .layout {
+                display: block;
+            }
+
+            .logout {
+                position: static;
+                width: 100%;
+                margin-top: 15px;
+            }
+
+            .main {
+                margin-left: 0;
+                width: 100%;
+                padding: 15px;
+            }
+
+            .menu {
+                display: grid;
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .details {
+                grid-template-columns: 1fr;
+            }
+
+            .request-header {
+                align-items: flex-start;
+                flex-direction: column;
+            }
+
+            .timeline::before {
+                left: 10%;
+                right: 10%;
+            }
+        }
+
+        @media(max-width: 500px) {
+
+            .timeline {
+                display: block;
+            }
+
+            .timeline::before {
+                display: none;
+            }
+
+            .step {
+                width: 100%;
+                display: flex;
+                align-items: center;
+                gap: 12px;
+                margin-bottom: 15px;
+                text-align: left;
+            }
+
+            .step .circle {
+                margin: 0;
+                flex-shrink: 0;
+            }
+
+            .step p {
+                margin: 0;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="layout">
+
+    <!-- SIDEBAR -->
+
+    <aside class="sidebar">
+
+        <div class="logo">
+            <h2>🌱 EcoTrack</h2>
+            <p>Smart Waste Management</p>
+        </div>
+
+        <div class="menu">
+
+            <button onclick="location.href='citizen.html'">
+                🏠 Dashboard
+            </button>
+
+            <button onclick="location.href='report.html'">
+                🗑️ Report Waste
+            </button>
+
+            <button onclick="location.href='pickup.html'">
+                🚛 Pickup Request
+            </button>
+
+            <button onclick="location.href='tracking.html'">
+                📍 Track Complaint
+            </button>
+
+            <button onclick="location.href='pickup-tracking.html'">
+                🚚 Pickup Tracking
+            </button>
+
+            <button onclick="location.href='awareness.html'">
+                🌿 Awareness
+            </button>
+
+            <button onclick="location.href='citizen-profile.html'">
+                👤 My Profile
+            </button>
+
+        </div>
+
+        <button class="logout" id="logoutBtn">
+            🚪 Logout
+        </button>
+
+    </aside>
+
+
+    <!-- MAIN -->
+
+    <main class="main">
+
+        <div class="topbar">
+
+            <h1>🚚 Pickup Tracking</h1>
+
+            <p>
+                Track the current status of your waste pickup requests.
+            </p>
+
+        </div>
+
+
+        <div class="info-box">
+
+            <h2>Waste Pickup Status</h2>
+
+            <p>
+                Your pickup requests are connected with the EcoTrack
+                administration system. Any status update made by the
+                admin will appear here.
+            </p>
+
+        </div>
+
+
+        <!-- REQUESTS -->
+
+        <div id="requestsContainer">
+
+            <div class="message">
+                Loading your pickup requests...
+            </div>
+
+        </div>
+
+    </main>
+
+</div>
+
+
+<script type="module">
+
+import { auth, db } from "./firebase.js";
+
+import {     
+    onAuthStateChanged,
+    signOut
+} from "https://www.gstatic.com/firebasejs/12.0.0/firebase-auth.js";
+
+import {
+    ref,
+    get
+} from "https://www.gstatic.com/firebasejs/12.0.0/firebase-database.js";
+
+
+let currentUser = null;
+
+
+/* AUTH */
+
+onAuthStateChanged(auth, async (user) => {
+
+    if (!user) {
+
+        location.href = "login.html";
+
+        return;
+    }
+
+    currentUser = user;
+
+    await loadPickupRequests();
+
+});
+
+
+/* LOAD PICKUP REQUESTS */
+
+async function loadPickupRequests() {
+
+    const container =
+        document.getElementById("requestsContainer");
+
+    try {
+
+        const snapshot =
+            await get(ref(db, "pickupRequests"));
+
+        if (!snapshot.exists()) {
+
+            showEmpty();
+
+            return;
+        }
+
+
+        const data = snapshot.val();
+
+        const requests = [];
+
+
+        Object.entries(data).forEach(([id, request]) => {
+
+            if (request.userId === currentUser.uid) {
+
+                requests.push({
+                    id,
+                    ...request
+                });
+
+            }
+
+        });
+
+
+        /* NEWEST FIRST */
+
+        requests.sort((a, b) => {
+
+            return (b.createdAt || 0) -
+                   (a.createdAt || 0);
+
+        });
+
+
+        if (requests.length === 0) {
+
+            showEmpty();
+
+            return;
+        }
+
+
+        container.innerHTML = "";
+
+
+        requests.forEach(request => {
+
+            container.innerHTML +=
+                createRequestCard(request);
+
+        });
+
+
+    } catch (error) {
+
+        console.error(error);
+
+        container.innerHTML = `
+            <div class="message">
+                <h3>Unable to load pickup requests</h3>
+                <p>Please refresh the page and try again.</p>
+            </div>
+        `;
+
+    }
+
+}
+
+
+/* CREATE CARD */
+
+function createRequestCard(request) {
+
+    const status =
+        request.status || "pending";
+
+    const trackingId =
+        "PK-" +
+        request.id.slice(-6).toUpperCase();
+
+
+    const date =
+        request.date || "Not specified";
+
+    const time =
+        request.time || "Not specified";
+
+    const wasteType =
+        request.wasteType || "Not specified";
+
+    const address =
+        request.address || "Not specified";
+
+    const area =
+        request.area || "Not specified";
+
+    const instructions =
+        request.instructions || "None";
+
+
+    let statusClass = status
+        .toLowerCase()
+        .replace(/\s+/g, "-");
+
+
+    let statusText = status
+        .replace(/-/g, " ");
+
+
+    return `
+
+        <div class="request-card">
+
+            <div class="request-header">
+
+                <div>
+
+                    <h3>🚛 Waste Pickup Request</h3>
+
+                    <div class="request-id">
+                        Tracking ID: ${trackingId}
+                    </div>
+
+                </div>
+
+                <div class="status ${statusClass}">
+                    ${statusText}
+                </div>
+
+            </div>
+
+
+            <div class="details">
+
+                <div class="detail">
+
+                    <span>Waste Type</span>
+
+                    <strong>
+                        ${wasteType}
+                    </strong>
+
+                </div>
+
+
+                <div class="detail">
+
+                    <span>Pickup Date</span>
+
+                    <strong>
+                        ${date}
+                    </strong>
+
+                </div>
+
+
+                <div class="detail">
+
+                    <span>Pickup Time</span>
+
+                    <strong>
+                        ${time}
+                    </strong>
+
+                </div>
+
+
+                <div class="detail">
+
+                    <span>Address</span>
+
+                    <strong>
+                        ${address}
+                    </strong>
+
+                </div>
+
+
+                <div class="detail">
+
+                    <span>Area</span>
+
+                    <strong>
+                        ${area}
+                    </strong>
+
+                </div>
+
+
+                <div class="detail">
+
+                    <span>Instructions</span>
+
+                    <strong>
+                        ${instructions}
+                    </strong>
+
+                </div>
+
+            </div>
+
+
+            <h3 class="timeline-title">
+                Pickup Progress
+            </h3>
+
+            ${createTimeline(status)}
+
+        </div>
+
+    `;
+
+}
+
+
+/* TIMELINE */
+
+function createTimeline(status) {
+
+    const statuses = [
+        "pending",
+        "scheduled",
+        "picked-up"
+    ];
+
+
+    const currentIndex =
+        statuses.indexOf(status);
+
+
+    if (status === "rejected") {
+
+        return `
+
+            <div class="timeline">
+
+                <div class="step active">
+
+                    <div class="circle">
+                        ✕
+                    </div>
+
+                    <p>
+                        Pickup Rejected
+                    </p>
+
+                </div>
+
+            </div>
+
+        `;
+
+    }
+
+
+    return `
+
+        <div class="timeline">
+
+            <div class="step ${
+                currentIndex >= 0
+                ? "active"
+                : ""
+            }">
+
+                <div class="circle">
+                    1
+                </div>
+
+                <p>
+                    Request Sent
+                </p>
+
+            </div>
+
+
+            <div class="step ${
+                currentIndex >= 1
+                ? "active"
+                : ""
+            }">
+
+                <div class="circle">
+                    2
+                </div>
+
+                <p>
+                    Scheduled
+                </p>
+
+            </div>
+
+
+            <div class="step ${
+                currentIndex >= 2
+                ? "active"
+                : ""
+            }">
+
+                <div class="circle">
+                    3
+                </div>
+
+                <p>
+                    Picked Up
+                </p>
+
+            </div>
+
+        </div>
+
+    `;
+
+}
+
+
+/* EMPTY STATE */
+
+function showEmpty() {
+
+    document.getElementById("requestsContainer").innerHTML = `
+
+        <div class="empty">
+
+            <div class="icon">
+                🚛
+            </div>
+
+            <h2>No Pickup Requests</h2>
+
+            <p>
+                You haven't submitted any waste pickup requests yet.
+            </p>
+
+            <button
+                class="request-btn"
+                onclick="location.href='pickup.html'">
+
+                Request Waste Pickup
+
+            </button>
+
+        </div>
+
+    `;
+
+}
+
+
+/* LOGOUT */
+
+document.getElementById("logoutBtn")
+    .addEventListener("click", async () => {
+
+        try {
+
+            await signOut(auth);
+
+            location.href = "index.html";
+
+        } catch (error) {
+
+            console.error(error);
+
+        }
+
+    });
+
+</script>
+
+</body>
+</html>

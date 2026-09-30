@@ -1,0 +1,376 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Track Complaint | EcoTrack</title>
+
+<style>
+*{
+    box-sizing:border-box;
+    margin:0;
+    padding:0;
+    font-family:Arial,sans-serif;
+}
+
+body{
+    background:#f4fff7;
+    color:#183b25;
+}
+
+header{
+    background:#16834b;
+    color:white;
+    padding:18px 25px;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+}
+
+header h2{
+    margin:0;
+}
+
+.logout{
+    background:white;
+    color:#16834b;
+    border:0;
+    padding:9px 15px;
+    border-radius:8px;
+    cursor:pointer;
+    font-weight:bold;
+}
+
+.container{
+    max-width:900px;
+    margin:30px auto;
+    padding:20px;
+}
+
+h1{
+    margin-bottom:8px;
+}
+
+.subtitle{
+    color:#66756b;
+    margin-bottom:25px;
+}
+
+#reports{
+    display:grid;
+    gap:18px;
+}
+
+.card{
+    background:white;
+    border-radius:15px;
+    padding:22px;
+    box-shadow:0 5px 20px rgba(0,0,0,.08);
+    border-left:5px solid #16834b;
+}
+
+.card h3{
+    margin-bottom:12px;
+}
+
+.info{
+    margin:8px 0;
+    color:#4e5e54;
+}
+
+.status{
+    display:inline-block;
+    margin-top:12px;
+    padding:7px 13px;
+    border-radius:20px;
+    background:#fff3cd;
+    color:#856404;
+    font-weight:bold;
+    text-transform:capitalize;
+}
+
+.resolved{
+    background:#d4edda;
+    color:#155724;
+}
+
+.rejected{
+    background:#f8d7da;
+    color:#721c24;
+}
+
+.empty{
+    background:white;
+    padding:30px;
+    border-radius:15px;
+    text-align:center;
+    box-shadow:0 5px 20px rgba(0,0,0,.06);
+}
+
+.loading{
+    text-align:center;
+    padding:30px;
+}
+
+.track-id{
+    color:#16834b;
+    font-weight:bold;
+}
+</style>
+</head>
+
+<body>
+
+<header>
+    <h2>🌱 EcoTrack</h2>
+    <button class="logout" id="logoutBtn">Logout</button>
+</header>
+
+<div class="container">
+
+    <h1>📋 Track My Complaints</h1>
+    <p class="subtitle">
+        Check the current status of your waste reports.
+    </p>
+
+    <div id="reports">
+        <div class="loading">Loading your complaints...</div>
+    </div>
+
+</div>
+
+<script type="module">
+
+import { auth, db } from "./firebase.js";
+
+import {
+    onAuthStateChanged,
+    signOut
+} from "https://www.gstatic.com/firebasejs/12.0.0/firebase-auth.js";
+
+import {
+    ref,
+    get
+} from "https://www.gstatic.com/firebasejs/12.0.0/firebase-database.js";
+
+
+const reportsContainer = document.getElementById("reports");
+
+
+/* LOGIN CHECK */
+
+onAuthStateChanged(auth, async (user) => {
+
+    if (!user) {
+        window.location.href = "login.html";
+        return;
+    }
+
+    console.log("Logged in UID:", user.uid);
+
+    await loadReports(user.uid);
+
+});
+
+
+/* LOAD REPORTS */
+
+async function loadReports(uid) {
+
+    try {
+
+        const snapshot = await get(ref(db, "reports"));
+
+        reportsContainer.innerHTML = "";
+
+        if (!snapshot.exists()) {
+
+            reportsContainer.innerHTML = `
+                <div class="empty">
+                    <h3>No complaints found</h3>
+                    <p>You have not submitted any waste report yet.</p>
+                </div>
+            `;
+
+            return;
+        }
+
+
+        let found = false;
+
+
+        snapshot.forEach((child) => {
+
+            const report = child.val();
+
+            /*
+             IMPORTANT:
+             Match Firebase report userId with
+             currently logged-in Firebase UID.
+            */
+
+            if (report.userId === uid) {
+
+                found = true;
+
+                const trackingId =
+                    "ET-" + child.key.slice(-6).toUpperCase();
+
+
+                let status = report.status || "pending";
+
+                let statusClass = "";
+
+                if (status === "resolved") {
+                    statusClass = "resolved";
+                }
+
+                if (status === "rejected") {
+                    statusClass = "rejected";
+                }
+
+
+                const date = report.createdAt
+                    ? new Date(report.createdAt).toLocaleString()
+                    : "Not available";
+
+
+                reportsContainer.innerHTML += `
+
+                    <div class="card">
+
+                        <h3>
+                            🗑️ ${escapeHTML(report.category || "Waste Report")}
+                        </h3>
+
+                        <div class="track-id">
+                            Tracking ID: ${trackingId}
+                        </div>
+
+                        <div class="info">
+                            📍 <strong>Location:</strong>
+                            ${escapeHTML(report.location || "Not provided")}
+                        </div>
+
+                        <div class="info">
+                            📝 <strong>Description:</strong>
+                            ${escapeHTML(report.description || "Not provided")}
+                        </div>
+
+                        <div class="info">
+                            📅 <strong>Reported:</strong>
+                            ${date}
+                        </div>
+
+                        ${
+                            report.area
+                            ? `
+                            <div class="info">
+                                🏙️ <strong>Area:</strong>
+                                ${escapeHTML(report.area)}
+                            </div>
+                            `
+                            : ""
+                        }
+
+                        ${
+                            report.severity
+                            ? `
+                            <div class="info">
+                                ⚠️ <strong>Severity:</strong>
+                                ${escapeHTML(report.severity)}
+                            </div>
+                            `
+                            : ""
+                        }
+
+                        <span class="status ${statusClass}">
+                            ${escapeHTML(status)}
+                        </span>
+
+                    </div>
+
+                `;
+
+            }
+
+        });
+
+
+        if (!found) {
+
+            reportsContainer.innerHTML = `
+                <div class="empty">
+
+                    <h3>📭 No complaints found</h3>
+
+                    <p>
+                        Your account does not have any submitted
+                        complaints yet.
+                    </p>
+
+                    <br>
+
+                    <button
+                        onclick="location.href='report.html'"
+                        style="
+                        background:#16834b;
+                        color:white;
+                        border:0;
+                        padding:12px 20px;
+                        border-radius:8px;
+                        cursor:pointer;
+                        "
+                    >
+                        + Report Waste
+                    </button>
+
+                </div>
+            `;
+
+        }
+
+    } catch (error) {
+
+        console.error("Report loading error:", error);
+
+        reportsContainer.innerHTML = `
+            <div class="empty">
+                <h3>⚠️ Something went wrong</h3>
+                <p>Please refresh the page and try again.</p>
+            </div>
+        `;
+
+    }
+
+}
+
+
+/* SAFE TEXT */
+
+function escapeHTML(value) {
+
+    return String(value)
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#039;");
+
+}
+
+
+/* LOGOUT */
+
+document.getElementById("logoutBtn").addEventListener("click", async () => {
+
+    await signOut(auth);
+
+    window.location.href = "login.html";
+
+});
+
+</script>
+
+</body>
+</html>

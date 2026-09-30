@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Login | EcoTrack</title>
+
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+    <div class="auth-page">
+
+        <div class="auth-box">
+
+            <div class="auth-logo">
+                🌱 Eco<span>Track</span>
+            </div>
+
+            <h1>Welcome Back</h1>
+
+            <p class="auth-subtitle">
+                Login to continue managing your waste reports and pickups.
+            </p>
+
+            <form id="loginForm">
+
+                <label for="email">
+                    Email Address
+                </label>
+
+                <input
+                    type="email"
+                    id="email"
+                    placeholder="Enter your email"
+                    required
+                >
+
+                <label for="password">
+                    Password
+                </label>
+
+                <input
+                    type="password"
+                    id="password"
+                    autocomplete="new-password"
+                    placeholder="Enter your password"
+                    required
+                >
+
+                <button
+                    type="submit"
+                    class="auth-btn"
+                    id="loginBtn"
+                >
+                    Login
+                </button>
+
+            </form>
+
+            <p class="auth-bottom">
+                Don't have an account?
+                <a href="register.html">
+                    Create Account
+                </a>
+            </p>
+
+            <a href="index.html" class="back-home">
+                ← Back to Home
+            </a>
+
+        </div>
+
+    </div>
+
+
+    <!-- Firebase Login -->
+
+    <script type="module">
+
+        import { auth, db } from "./firebase.js";
+
+        import {
+            signInWithEmailAndPassword
+        } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-auth.js";
+
+        import {
+            ref,
+            get
+        } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-database.js";
+
+
+        const loginForm =
+            document.getElementById("loginForm");
+
+        const loginBtn =
+            document.getElementById("loginBtn");
+
+
+        loginForm.addEventListener("submit", async function(event) {
+
+            event.preventDefault();
+
+
+            const email =
+                document.getElementById("email").value.trim();
+
+            const password =
+                document.getElementById("password").value;
+
+
+            loginBtn.disabled = true;
+            loginBtn.textContent = "Logging in...";
+
+
+            try {
+
+                // Firebase Authentication
+
+                const userCredential =
+                    await signInWithEmailAndPassword(
+                        auth,
+                        email,
+                        password
+                    );
+
+
+                const user =
+                    userCredential.user;
+
+
+                // Get user data from Realtime Database
+
+                const userSnapshot =
+                    await get(
+                        ref(db, "users/" + user.uid)
+                    );
+
+
+                if (!userSnapshot.exists()) {
+
+                    alert(
+                        "User profile was not found."
+                    );
+
+                    loginBtn.disabled = false;
+                    loginBtn.textContent = "Login";
+
+                    return;
+                }
+
+
+                const userData =
+                    userSnapshot.val();
+
+
+                // Redirect according to role
+
+                if (userData.role === "admin") {
+
+                    window.location.href =
+                        "admin.html";
+
+                } else {
+
+                    window.location.href =
+                        "citizen.html";
+
+                }
+
+
+            } catch (error) {
+
+                console.error(error);
+
+
+                let message =
+                    "Login failed. Please try again.";
+
+
+                if (
+                    error.code ===
+                    "auth/invalid-credential"
+                ) {
+
+                    message =
+                        "Incorrect email or password.";
+
+                } else if (
+                    error.code ===
+                    "auth/user-not-found"
+                ) {
+
+                    message =
+                        "No account found with this email.";
+
+                } else if (
+                    error.code ===
+                    "auth/wrong-password"
+                ) {
+
+                    message =
+                        "Incorrect password.";
+
+                } else if (
+                    error.code ===
+                    "auth/invalid-email"
+                ) {
+
+                    message =
+                        "Please enter a valid email address.";
+
+                } else if (
+                    error.code ===
+                    "auth/network-request-failed"
+                ) {
+
+                    message =
+                        "Network problem. Check your internet.";
+
+                }
+
+
+                alert(message);
+
+
+                loginBtn.disabled = false;
+                loginBtn.textContent = "Login";
+
+            }
+
+        });
+
+    </script>
+
+</body>
+
+</html>

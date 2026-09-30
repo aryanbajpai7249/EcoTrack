@@ -1,0 +1,846 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>Request Pickup | EcoTrack</title>
+
+    <link rel="stylesheet"
+          href="css/style.css">
+
+    <style>
+
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background: #f5faf7;
+            color: #26382f;
+        }
+
+        .pickup-page {
+            min-height: 100vh;
+            padding: 30px 20px;
+        }
+
+        .pickup-container {
+            max-width: 850px;
+            margin: auto;
+        }
+
+        .header {
+            margin-bottom: 25px;
+        }
+
+        .back-link {
+            display: inline-block;
+            color: #28a66a;
+            text-decoration: none;
+            font-size: 14px;
+            margin-bottom: 18px;
+        }
+
+        .back-link:hover {
+            text-decoration: underline;
+        }
+
+        .header h1 {
+            margin: 0 0 8px;
+            font-size: 30px;
+        }
+
+        .header p {
+            margin: 0;
+            color: #718078;
+            line-height: 1.5;
+        }
+
+        .pickup-box {
+            background: white;
+            border: 1px solid #e1ebe6;
+            border-radius: 18px;
+            padding: 30px;
+            box-shadow: 0 12px 35px rgba(30, 90, 60, 0.07);
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-size: 14px;
+            font-weight: bold;
+            color: #30483e;
+        }
+
+        input,
+        select,
+        textarea {
+            width: 100%;
+            box-sizing: border-box;
+            padding: 13px 14px;
+            border: 1px solid #d8e5de;
+            border-radius: 9px;
+            outline: none;
+            font-size: 14px;
+            background: #fbfdfc;
+        }
+
+        input:focus,
+        select:focus,
+        textarea:focus {
+            border-color: #28a66a;
+            box-shadow: 0 0 0 3px rgba(40, 166, 106, 0.08);
+        }
+
+        textarea {
+            min-height: 110px;
+            resize: vertical;
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 18px;
+        }
+
+        .waste-options {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 12px;
+        }
+
+        .waste-option {
+            border: 1px solid #d8e5de;
+            border-radius: 10px;
+            padding: 14px;
+            background: #fbfdfc;
+            transition: 0.2s;
+        }
+
+        .waste-option:hover {
+            border-color: #28a66a;
+            background: #f4fbf7;
+        }
+
+        .waste-option input {
+            width: auto;
+            margin-right: 8px;
+        }
+
+        .waste-option label {
+            display: inline;
+            font-weight: normal;
+            cursor: pointer;
+        }
+
+        .submit-btn {
+            width: 100%;
+            border: none;
+            padding: 14px;
+            border-radius: 10px;
+            background: #28a66a;
+            color: white;
+            font-size: 15px;
+            font-weight: bold;
+            cursor: pointer;
+            margin-top: 5px;
+            transition: 0.2s;
+        }
+
+        .submit-btn:hover {
+            background: #218b58;
+        }
+
+        .submit-btn:disabled {
+            opacity: 0.7;
+            cursor: not-allowed;
+        }
+
+        .info-box {
+            margin-top: 20px;
+            padding: 15px;
+            border-radius: 10px;
+            background: #eef9f3;
+            color: #416052;
+            font-size: 13px;
+            line-height: 1.5;
+        }
+
+        .points-box {
+            margin-bottom: 20px;
+            padding: 16px;
+            border-radius: 12px;
+            background: linear-gradient(
+                135deg,
+                #eafaf1,
+                #f5fff9
+            );
+            border: 1px solid #d8eee1;
+        }
+
+        .points-box strong {
+            color: #218b58;
+        }
+
+        @media (max-width: 650px) {
+
+            .pickup-page {
+                padding: 20px 15px;
+            }
+
+            .pickup-box {
+                padding: 22px 18px;
+            }
+
+            .header h1 {
+                font-size: 25px;
+            }
+
+            .form-row,
+            .waste-options {
+                grid-template-columns: 1fr;
+            }
+
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+
+<div class="pickup-page">
+
+
+    <div class="pickup-container">
+
+
+        <!-- HEADER -->
+
+        <div class="header">
+
+            <a href="citizen.html"
+               class="back-link">
+
+                ← Back to Dashboard
+
+            </a>
+
+            <h1>
+                🚛 Request Waste Pickup
+            </h1>
+
+            <p>
+                Schedule a waste pickup from your home
+                or selected location.
+            </p>
+
+        </div>
+
+
+
+        <!-- FORM BOX -->
+
+        <div class="pickup-box">
+
+
+            <!-- ECO POINT INFO -->
+
+            <div class="points-box">
+
+                🌱 <strong>Earn +5 Eco Points</strong>
+
+                <br>
+
+                Requesting a waste pickup helps keep
+                your area clean and earns you 5 Eco Points.
+
+            </div>
+
+
+
+            <form id="pickupForm">
+
+
+                <!-- WASTE TYPE -->
+
+                <div class="form-group">
+
+                    <label>
+                        Type of Waste
+                    </label>
+
+
+                    <div class="waste-options">
+
+
+                        <div class="waste-option">
+
+                            <input
+                                type="radio"
+                                id="wet"
+                                name="wasteType"
+                                value="Wet Waste"
+                                required
+                            >
+
+                            <label for="wet">
+                                🥬 Wet Waste
+                            </label>
+
+                        </div>
+
+
+
+                        <div class="waste-option">
+
+                            <input
+                                type="radio"
+                                id="dry"
+                                name="wasteType"
+                                value="Dry Waste"
+                            >
+
+                            <label for="dry">
+                                📦 Dry Waste
+                            </label>
+
+                        </div>
+
+
+
+                        <div class="waste-option">
+
+                            <input
+                                type="radio"
+                                id="plastic"
+                                name="wasteType"
+                                value="Plastic Waste"
+                            >
+
+                            <label for="plastic">
+                                🧴 Plastic Waste
+                            </label>
+
+                        </div>
+
+
+
+                        <div class="waste-option">
+
+                            <input
+                                type="radio"
+                                id="ewaste"
+                                name="wasteType"
+                                value="E-Waste"
+                            >
+
+                            <label for="ewaste">
+                                💻 E-Waste
+                            </label>
+
+                        </div>
+
+
+                    </div>
+
+                </div>
+
+
+
+                <!-- ADDRESS -->
+
+                <div class="form-group">
+
+                    <label for="address">
+                        Pickup Address
+                    </label>
+
+                    <input
+                        type="text"
+                        id="address"
+                        placeholder="Enter complete pickup address"
+                        required
+                    >
+
+                </div>
+
+
+
+                <!-- AREA -->
+
+                <div class="form-group">
+
+                    <label for="area">
+                        Area / Locality
+                    </label>
+
+                    <input
+                        type="text"
+                        id="area"
+                        placeholder="Enter your area or locality"
+                        required
+                    >
+
+                </div>
+
+
+
+                <!-- DATE + TIME -->
+
+                <div class="form-row">
+
+
+                    <div class="form-group">
+
+                        <label for="date">
+                            Pickup Date
+                        </label>
+
+                        <input
+                            type="date"
+                            id="date"
+                            required
+                        >
+
+                    </div>
+
+
+
+                    <div class="form-group">
+
+                        <label for="time">
+                            Preferred Time
+                        </label>
+
+                        <select id="time" required>
+
+                            <option value="">
+                                Select time
+                            </option>
+
+                            <option value="Morning">
+                                🌅 Morning (8 AM - 11 AM)
+                            </option>
+
+                            <option value="Afternoon">
+                                ☀️ Afternoon (12 PM - 3 PM)
+                            </option>
+
+                            <option value="Evening">
+                                🌇 Evening (4 PM - 7 PM)
+                            </option>
+
+                        </select>
+
+                    </div>
+
+
+                </div>
+
+
+
+                <!-- INSTRUCTIONS -->
+
+                <div class="form-group">
+
+                    <label for="instructions">
+                        Additional Instructions
+                    </label>
+
+                    <textarea
+                        id="instructions"
+                        placeholder="Any special instructions for the pickup..."
+                    ></textarea>
+
+                </div>
+
+
+
+                <!-- SUBMIT -->
+
+                <button
+                    type="submit"
+                    class="submit-btn"
+                    id="submitBtn"
+                >
+
+                    🚛 Request Pickup
+
+                </button>
+
+
+
+                <!-- TIP -->
+
+                <div class="info-box">
+
+                    💡 <strong>Tip:</strong>
+
+                    Please keep the waste separated according
+                    to its type before the pickup arrives.
+
+                </div>
+
+
+            </form>
+
+
+        </div>
+
+
+    </div>
+
+
+</div>
+
+
+
+<!-- =========================
+     FIREBASE
+========================= -->
+
+<script type="module">
+
+
+    import { auth, db }
+        from "./firebase.js";
+
+
+    import {
+        onAuthStateChanged
+    }
+    from "https://www.gstatic.com/firebasejs/12.0.0/firebase-auth.js";
+
+
+    import {
+        ref,
+        push,
+        set,
+        get,
+        update
+    }
+    from "https://www.gstatic.com/firebasejs/12.0.0/firebase-database.js";
+
+
+
+    const pickupForm =
+        document.getElementById("pickupForm");
+
+
+    const submitBtn =
+        document.getElementById("submitBtn");
+
+
+
+    let currentUser = null;
+
+
+
+    // =========================
+    // CHECK LOGIN
+    // =========================
+
+    onAuthStateChanged(
+        auth,
+        function(user) {
+
+
+            if (!user) {
+
+                alert(
+                    "Please login before requesting a pickup."
+                );
+
+                window.location.href =
+                    "login.html";
+
+                return;
+
+            }
+
+
+            currentUser = user;
+
+
+        }
+    );
+
+
+
+    // =========================
+    // SUBMIT PICKUP REQUEST
+    // =========================
+
+    pickupForm.addEventListener(
+        "submit",
+        async function(event) {
+
+
+            event.preventDefault();
+
+
+
+            // Check login
+
+            if (!currentUser) {
+
+                alert(
+                    "Please login before requesting a pickup."
+                );
+
+                return;
+
+            }
+
+
+
+            // =========================
+            // GET FORM VALUES
+            // =========================
+
+            const selectedWaste =
+                document.querySelector(
+                    'input[name="wasteType"]:checked'
+                );
+
+
+            if (!selectedWaste) {
+
+                alert(
+                    "Please select a waste type."
+                );
+
+                return;
+
+            }
+
+
+            const wasteType =
+                selectedWaste.value;
+
+
+
+            const address =
+                document.getElementById("address")
+                .value
+                .trim();
+
+
+
+            const area =
+                document.getElementById("area")
+                .value
+                .trim();
+
+
+
+            const date =
+                document.getElementById("date")
+                .value;
+
+
+
+            const time =
+                document.getElementById("time")
+                .value;
+
+
+
+            const instructions =
+                document.getElementById("instructions")
+                .value
+                .trim();
+
+
+
+            // =========================
+            // BUTTON LOADING
+            // =========================
+
+            submitBtn.disabled = true;
+
+            submitBtn.textContent =
+                "Submitting Request...";
+
+
+
+            try {
+
+
+                // =========================
+                // CREATE REQUEST ID
+                // =========================
+
+                const requestRef =
+                    push(
+                        ref(
+                            db,
+                            "pickupRequests"
+                        )
+                    );
+
+
+
+                // =========================
+                // SAVE PICKUP REQUEST
+                // =========================
+
+                await set(
+                    requestRef,
+                    {
+
+                        userId:
+                            currentUser.uid,
+
+                        userEmail:
+                            currentUser.email,
+
+                        wasteType:
+                            wasteType,
+
+                        address:
+                            address,
+
+                        area:
+                            area,
+
+                        date:
+                            date,
+
+                        time:
+                            time,
+
+                        instructions:
+                            instructions,
+
+                        status:
+                            "pending",
+
+                        createdAt:
+                            Date.now()
+
+                    }
+                );
+
+
+
+                // =========================
+                // ADD +5 ECO POINTS
+                // =========================
+
+                const pointsRef =
+                    ref(
+                        db,
+                        "ecoPoints/" +
+                        currentUser.uid
+                    );
+
+
+
+                const pointsSnapshot =
+                    await get(pointsRef);
+
+
+
+                let oldPoints = 0;
+
+
+
+                if (
+                    pointsSnapshot.exists()
+                ) {
+
+                    oldPoints =
+                        pointsSnapshot
+                        .val()
+                        .points || 0;
+
+                }
+
+
+
+                const newPoints =
+                    oldPoints + 5;
+
+
+
+                await update(
+                    pointsRef,
+                    {
+
+                        points:
+                            newPoints,
+
+                        updatedAt:
+                            Date.now()
+
+                    }
+                );
+
+
+
+                // =========================
+                // SUCCESS
+                // =========================
+
+                alert(
+                    "Waste pickup request submitted successfully! 🚛\n\n" +
+                    "+5 Eco Points earned! 🌱"
+                );
+
+
+
+                // =========================
+                // DASHBOARD
+                // =========================
+
+                window.location.href =
+                    "citizen.html";
+
+
+            }
+            catch (error) {
+
+
+                console.error(
+                    "Pickup Error:",
+                    error
+                );
+
+
+                alert(
+                    "Unable to submit pickup request. Please try again."
+                );
+
+
+                submitBtn.disabled =
+                    false;
+
+
+                submitBtn.textContent =
+                    "🚛 Request Pickup";
+
+
+            }
+
+
+        }
+    );
+
+
+</script>
+
+
+</body>
+
+</html>

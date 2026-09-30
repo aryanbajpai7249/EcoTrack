@@ -1,0 +1,1678 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+<meta charset="UTF-8">
+
+<meta name="viewport"
+content="width=device-width, initial-scale=1.0">
+
+<title>EcoTrack | Admin Dashboard</title>
+
+<style>
+
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:Arial,sans-serif;
+}
+
+body{
+    background:#f4f7f5;
+    color:#1f2937;
+}
+
+.layout{
+    display:flex;
+    min-height:100vh;
+}
+
+/* SIDEBAR */
+
+.sidebar{
+    width:240px;
+    background:#123c2b;
+    color:white;
+    padding:25px 18px;
+    position:fixed;
+    height:100vh;
+}
+
+.logo{
+    font-size:25px;
+    font-weight:bold;
+    margin-bottom:35px;
+}
+
+.logo span{
+    color:#7ee081;
+}
+
+.menu{
+    display:flex;
+    flex-direction:column;
+    gap:10px;
+}
+
+.menu button{
+    border:none;
+    background:transparent;
+    color:white;
+    text-align:left;
+    padding:13px;
+    border-radius:10px;
+    cursor:pointer;
+    font-size:15px;
+}
+
+.menu button:hover,
+.menu button.active{
+    background:#205c43;
+}
+
+.logout{
+    position:absolute;
+    bottom:25px;
+    left:18px;
+    right:18px;
+    background:#d9534f !important;
+}
+
+/* MAIN */
+
+.main{
+    margin-left:240px;
+    width:calc(100% - 240px);
+    padding:25px;
+}
+
+.topbar{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    margin-bottom:25px;
+}
+
+.topbar h1{
+    font-size:28px;
+}
+
+.topbar p{
+    color:#6b7280;
+    margin-top:5px;
+}
+
+.admin-box{
+    background:white;
+    padding:10px 15px;
+    border-radius:12px;
+    box-shadow:0 4px 15px rgba(0,0,0,.06);
+}
+
+/* STATS */
+
+.stats{
+    display:grid;
+    grid-template-columns:repeat(4,1fr);
+    gap:18px;
+    margin-bottom:25px;
+}
+
+.stat-card{
+    background:white;
+    padding:22px;
+    border-radius:15px;
+    box-shadow:0 5px 18px rgba(0,0,0,.06);
+}
+
+.stat-card h3{
+    font-size:14px;
+    color:#6b7280;
+    margin-bottom:10px;
+}
+
+.stat-card strong{
+    font-size:30px;
+    color:#123c2b;
+}
+
+/* SECTION */
+
+.section{
+    background:white;
+    padding:22px;
+    border-radius:15px;
+    margin-bottom:25px;
+    box-shadow:0 5px 18px rgba(0,0,0,.06);
+}
+
+.section-title{
+    margin-bottom:18px;
+}
+
+.section-title h2{
+    margin-bottom:5px;
+}
+
+.section-title p{
+    color:#6b7280;
+}
+
+/* TABLE */
+
+.table-wrap{
+    overflow-x:auto;
+}
+
+table{
+    width:100%;
+    border-collapse:collapse;
+    min-width:1050px;
+}
+
+th,
+td{
+    padding:13px;
+    border-bottom:1px solid #e5e7eb;
+    text-align:left;
+}
+
+th{
+    background:#f8faf9;
+    font-size:14px;
+}
+
+td{
+    font-size:14px;
+}
+
+input,
+select{
+    padding:8px;
+    border:1px solid #d1d5db;
+    border-radius:7px;
+    outline:none;
+}
+
+input:focus,
+select:focus{
+    border-color:#2f855a;
+}
+
+/* PHOTO */
+
+.report-photo{
+    width:80px;
+    height:60px;
+    object-fit:cover;
+    border-radius:8px;
+    border:1px solid #ddd;
+    cursor:pointer;
+}
+
+.no-photo{
+    color:#888;
+    font-size:13px;
+}
+
+/* BUTTONS */
+
+.save-btn{
+    border:none;
+    background:#176b45;
+    color:white;
+    padding:8px 12px;
+    border-radius:7px;
+    cursor:pointer;
+}
+
+.save-btn:hover{
+    background:#0f5132;
+}
+
+.map-btn{
+    border:none;
+    background:#2563eb;
+    color:white;
+    padding:8px 12px;
+    border-radius:7px;
+    cursor:pointer;
+}
+
+.map-btn:hover{
+    background:#1d4ed8;
+}
+
+.empty{
+    text-align:center;
+    padding:25px;
+    color:#777;
+}
+
+/* CLEANLINESS */
+
+.clean-box{
+    display:flex;
+    align-items:center;
+    gap:25px;
+}
+
+.score{
+    width:110px;
+    height:110px;
+    border-radius:50%;
+    background:#e4f5e9;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-size:27px;
+    font-weight:bold;
+    color:#176b45;
+}
+
+/* ACTIVITY */
+
+.activity{
+    display:flex;
+    gap:12px;
+    padding:13px 0;
+    border-bottom:1px solid #eee;
+}
+
+.activity-icon{
+    width:40px;
+    height:40px;
+    background:#e9f7ed;
+    border-radius:10px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+}
+
+.activity-text{
+    display:flex;
+    flex-direction:column;
+    gap:4px;
+}
+
+.activity-text span{
+    color:#777;
+    font-size:13px;
+}
+
+/* MOBILE */
+
+@media(max-width:900px){
+
+    .sidebar{
+        width:190px;
+    }
+
+    .main{
+        margin-left:190px;
+        width:calc(100% - 190px);
+    }
+
+    .stats{
+        grid-template-columns:repeat(2,1fr);
+    }
+
+}
+
+@media(max-width:600px){
+
+    .sidebar{
+        position:relative;
+        width:100%;
+        height:auto;
+    }
+
+    .layout{
+        display:block;
+    }
+
+    .main{
+        margin-left:0;
+        width:100%;
+        padding:15px;
+    }
+
+    .logout{
+        position:static;
+        margin-top:20px;
+    }
+
+    .stats{
+        grid-template-columns:1fr;
+    }
+
+    .topbar{
+        align-items:flex-start;
+        gap:10px;
+        flex-direction:column;
+    }
+
+}
+
+</style>
+
+</head>
+
+<body>
+
+<div class="layout">
+
+<aside class="sidebar">
+
+    <div class="logo">
+        Eco<span>Track</span>
+    </div>
+
+    <div class="menu">
+
+        <button
+            class="active"
+            onclick="goTop()"
+        >
+            🏠 Dashboard
+        </button>
+
+        <button onclick="scrollToReports()">
+            📋 Waste Reports
+        </button>
+
+        <button onclick="scrollToPickups()">
+            🚛 Pickup Requests
+        </button>
+
+        <button onclick="scrollToActivity()">
+            📊 Activity
+        </button>
+
+    </div>
+
+    <button
+        id="logoutBtn"
+        class="menu logout"
+    >
+        🚪 Logout
+    </button>
+
+</aside>
+
+<main class="main">
+
+<div class="topbar">
+
+    <div>
+
+        <h1>
+            Admin Dashboard
+        </h1>
+
+        <p>
+            EcoTrack Waste Management System
+        </p>
+
+    </div>
+
+    <div class="admin-box">
+
+        👤
+        <span id="adminName">
+            Administrator
+        </span>
+
+    </div>
+
+</div>
+
+<div class="stats">
+
+    <div class="stat-card">
+
+        <h3>
+            Total Waste Reports
+        </h3>
+
+        <strong id="totalReports">
+            0
+        </strong>
+
+    </div>
+
+    <div class="stat-card">
+
+        <h3>
+            Pickup Requests
+        </h3>
+
+        <strong id="totalPickups">
+            0
+        </strong>
+
+    </div>
+
+    <div class="stat-card">
+
+        <h3>
+            Resolved Reports
+        </h3>
+
+        <strong id="resolvedReports">
+            0
+        </strong>
+
+    </div>
+
+    <div class="stat-card">
+
+        <h3>
+            Total Citizens
+        </h3>
+
+        <strong id="totalCitizens">
+            0
+        </strong>
+
+    </div>
+
+</div>
+
+<!-- NEXT PART WILL START HERE -->
+ <!-- =========================
+     WASTE REPORTS
+========================= -->
+
+<section class="section" id="reportsSection">
+
+    <div class="section-header">
+
+        <h2>
+            📋 Waste Reports
+        </h2>
+
+        <p>
+            View and manage waste complaints submitted by citizens.
+        </p>
+
+    </div>
+
+    <div class="table-box">
+
+        <table>
+
+            <thead>
+
+                <tr>
+
+                    <th>Report ID</th>
+                    <th>Category</th>
+                    <th>Location</th>
+                    <th>Area</th>
+                    <th>Severity</th>
+                    <th>Status</th>
+                    <th>Action</th>
+
+                </tr>
+
+            </thead>
+
+            <tbody id="reportsTable">
+
+                <tr>
+
+                    <td
+                        colspan="7"
+                        class="empty"
+                    >
+                        Loading waste reports...
+                    </td>
+
+                </tr>
+
+            </tbody>
+
+        </table>
+
+    </div>
+
+</section>
+
+
+<!-- =========================
+     PICKUP REQUESTS
+========================= -->
+
+<section
+    class="section"
+    id="pickupsSection"
+>
+
+    <div class="section-header">
+
+        <h2>
+            🚛 Pickup Requests
+        </h2>
+
+        <p>
+            Manage waste pickup requests from citizens.
+        </p>
+
+    </div>
+
+    <div class="table-box">
+
+        <table>
+
+            <thead>
+
+                <tr>
+
+                    <th>Request ID</th>
+                    <th>Waste Type</th>
+                    <th>Address</th>
+                    <th>Area</th>
+                    <th>Date</th>
+                    <th>Time</th>
+                    <th>Status</th>
+                    <th>Action</th>
+
+                </tr>
+
+            </thead>
+
+            <tbody id="pickupsTable">
+
+                <tr>
+
+                    <td
+                        colspan="8"
+                        class="empty"
+                    >
+                        Loading pickup requests...
+                    </td>
+
+                </tr>
+
+            </tbody>
+
+        </table>
+
+    </div>
+
+</section>
+
+
+<!-- =========================
+     CLEANLINESS
+========================= -->
+
+<section class="section">
+
+    <div class="section-header">
+
+        <h2>
+            🌱 Cleanliness Score
+        </h2>
+
+        <p>
+            Current area cleanliness based on resolved reports.
+        </p>
+
+    </div>
+
+    <div class="clean">
+
+        <div
+            class="circle"
+            id="cleanlinessScore"
+        >
+            0%
+        </div>
+
+        <div>
+
+            <h3>
+                Area Cleanliness
+            </h3>
+
+            <p>
+                This score increases as waste reports
+                are successfully resolved.
+            </p>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+<!-- =========================
+     RECENT ACTIVITY
+========================= -->
+
+<section
+    class="section"
+    id="activitySection"
+>
+
+    <div class="section-header">
+
+        <h2>
+            📊 Recent Activity
+        </h2>
+
+        <p>
+            Latest activities on EcoTrack.
+        </p>
+
+    </div>
+
+    <div id="activityList">
+
+        <div class="empty">
+            Loading activity...
+        </div>
+
+    </div>
+
+</section>
+
+
+<script type="text/plain" id="legacyAdminScript">
+    import { auth, db } from "./firebase.js";
+
+import {
+    onAuthStateChanged,
+    signOut
+} from "https://www.gstatic.com/firebasejs/12.0.0/firebase-auth.js";
+
+import {
+    ref,
+    get,
+    update
+} from "https://www.gstatic.com/firebasejs/12.0.0/firebase-database.js";
+
+
+/* =========================
+   ELEMENTS
+========================= */
+
+const adminName =
+    document.getElementById("adminName");
+
+const totalReports =
+    document.getElementById("totalReports");
+
+const totalPickups =
+    document.getElementById("totalPickups");
+
+const resolvedReports =
+    document.getElementById("resolvedReports");
+
+const totalCitizens =
+    document.getElementById("totalCitizens");
+
+const reportsTable =
+    document.getElementById("reportsTable");
+
+const pickupsTable =
+    document.getElementById("pickupsTable");
+
+const cleanlinessScore =
+    document.getElementById("cleanlinessScore");
+
+const activityList =
+    document.getElementById("activityList");
+
+const logoutBtn =
+    document.getElementById("logoutBtn");
+
+
+/* =========================
+   ADMIN LOGIN CHECK
+========================= */
+
+onAuthStateChanged(auth, async (user) => {
+
+    if (!user) {
+
+        window.location.href = "login.html";
+
+        return;
+    }
+
+    try {
+
+        const userSnapshot =
+            await get(
+                ref(db, "users/" + user.uid)
+            );
+
+        if (!userSnapshot.exists()) {
+
+            alert("Admin profile not found.");
+
+            await signOut(auth);
+
+            window.location.href =
+                "login.html";
+
+            return;
+        }
+
+        const userData =
+            userSnapshot.val();
+
+
+        /* CHECK ADMIN ROLE */
+
+        if (
+            String(userData.role)
+                .toLowerCase() !== "admin"
+        ) {
+
+            alert("Admin access required.");
+
+            window.location.href =
+                "citizen.html";
+
+            return;
+        }
+
+
+        /* ADMIN NAME */
+
+        adminName.textContent =
+            userData.name || "Administrator";
+
+
+        /* LOAD DATA */
+
+        loadReports();
+
+        loadPickups();
+
+        loadCitizens();
+
+        loadActivity();
+
+    } catch (error) {
+
+        console.error(
+            "Admin check error:",
+            error
+        );
+
+        alert(
+            "Unable to load admin dashboard."
+        );
+
+    }
+
+});
+
+
+/* =========================
+   LOAD WASTE REPORTS
+========================= */
+
+async function loadReports() {
+
+    try {
+
+        const snapshot =
+            await get(
+                ref(db, "reports")
+            );
+
+
+        if (!snapshot.exists()) {
+
+            totalReports.textContent = "0";
+
+            resolvedReports.textContent = "0";
+
+            cleanlinessScore.textContent =
+                "0%";
+
+            reportsTable.innerHTML = `
+                <tr>
+                    <td
+                        colspan="7"
+                        class="empty"
+                    >
+                        No waste reports found.
+                    </td>
+                </tr>
+            `;
+
+            return;
+        }
+
+
+        const data =
+            snapshot.val();
+
+        const reports = [];
+
+        let resolved = 0;
+
+
+        Object.entries(data).forEach(
+            ([id, report]) => {
+
+                reports.push({
+                    id: id,
+                    ...report
+                });
+
+
+                if (
+                    String(report.status || "")
+                        .toLowerCase() === "resolved"
+                ) {
+
+                    resolved++;
+
+                }
+
+            }
+        );
+
+
+        /* NEWEST FIRST */
+
+        reports.sort(
+            (a, b) =>
+                new Date(
+                    b.createdAt || 0
+                ) -
+                new Date(
+                    a.createdAt || 0
+                )
+        );
+
+
+        /* STATS */
+
+        totalReports.textContent =
+            reports.length;
+
+        resolvedReports.textContent =
+            resolved;
+
+
+        /* CLEANLINESS SCORE */
+
+        const score =
+            reports.length > 0
+                ? Math.round(
+                    (resolved / reports.length) * 100
+                )
+                : 0;
+
+        cleanlinessScore.textContent =
+            score + "%";
+
+
+        /* TABLE */
+
+        reportsTable.innerHTML = "";
+
+
+        reports
+            .slice(0, 10)
+            .forEach(report => {
+
+                reportsTable.innerHTML +=
+                    createReportRow(report);
+
+            });
+
+
+    } catch (error) {
+
+        console.error(
+            "Reports error:",
+            error
+        );
+
+        reportsTable.innerHTML = `
+            <tr>
+                <td
+                    colspan="7"
+                    class="empty"
+                >
+                    Unable to load reports.
+                </td>
+            </tr>
+        `;
+
+    }
+
+}
+
+
+/* =========================
+   REPORT ROW
+========================= */
+
+function createReportRow(report) {
+
+    const reportId =
+        "ET-" +
+        report.id
+            .slice(-6)
+            .toUpperCase();
+
+
+    const status =
+        String(
+            report.status || "pending"
+        ).toLowerCase();
+
+
+    return `
+
+        <tr>
+
+            <td>
+                <strong>
+                    ${reportId}
+                </strong>
+            </td>
+
+            <td>
+                ${safe(report.category || "-")}
+            </td>
+
+            <td>
+                ${safe(report.location || "-")}
+            </td>
+
+            <td>
+                ${safe(report.area || "-")}
+            </td>
+
+            <td>
+                ${safe(report.severity || "-")}
+            </td>
+
+            <td>
+
+                <select
+                    id="reportStatus-${report.id}"
+                >
+
+                    <option
+                        value="pending"
+                        ${status === "pending"
+                            ? "selected"
+                            : ""}
+                    >
+                        Pending
+                    </option>
+
+                    <option
+                        value="reviewed"
+                        ${status === "reviewed"
+                            ? "selected"
+                            : ""}
+                    >
+                        Reviewed
+                    </option>
+
+                    <option
+                        value="in-progress"
+                        ${status === "in-progress"
+                            ? "selected"
+                            :
+                            import { auth, db } from "./firebase.js";
+
+import {
+    onAuthStateChanged,
+    signOut
+} from "https://www.gstatic.com/firebasejs/12.0.0/firebase-auth.js";
+
+import {
+    ref,
+    get,
+    update
+} from "https://www.gstatic.com/firebasejs/12.0.0/firebase-database.js";
+
+
+/* =========================
+   ELEMENTS
+========================= */
+
+const adminName =
+    document.getElementById("adminName");
+
+const totalReports =
+    document.getElementById("totalReports");
+
+const totalPickups =
+    document.getElementById("totalPickups");
+
+const resolvedReports =
+    document.getElementById("resolvedReports");
+
+const totalCitizens =
+    document.getElementById("totalCitizens");
+
+const reportsTable =
+    document.getElementById("reportsTable");
+
+const pickupsTable =
+    document.getElementById("pickupsTable");
+
+const cleanlinessScore =
+    document.getElementById("cleanlinessScore");
+
+const activityList =
+    document.getElementById("activityList");
+
+const logoutBtn =
+    document.getElementById("logoutBtn");
+
+
+/* =========================
+   ADMIN LOGIN CHECK
+========================= */
+
+onAuthStateChanged(auth, async (user) => {
+
+    if (!user) {
+
+        window.location.href = "login.html";
+
+        return;
+    }
+
+    try {
+
+        const userSnapshot =
+            await get(
+                ref(db, "users/" + user.uid)
+            );
+
+        if (!userSnapshot.exists()) {
+
+            alert("Admin profile not found.");
+
+            await signOut(auth);
+
+            window.location.href =
+                "login.html";
+
+            return;
+        }
+
+        const userData =
+            userSnapshot.val();
+
+
+        /* CHECK ADMIN ROLE */
+
+        if (
+            String(userData.role)
+                .toLowerCase() !== "admin"
+        ) {
+
+            alert("Admin access required.");
+
+            window.location.href =
+                "citizen.html";
+
+            return;
+        }
+
+
+        /* ADMIN NAME */
+
+        adminName.textContent =
+            userData.name || "Administrator";
+
+
+        /* LOAD DATA */
+
+        loadReports();
+
+        loadPickups();
+
+        loadCitizens();
+
+        loadActivity();
+
+    } catch (error) {
+
+        console.error(
+            "Admin check error:",
+            error
+        );
+
+        alert(
+            "Unable to load admin dashboard."
+        );
+
+    }
+
+});
+
+
+/* =========================
+   LOAD WASTE REPORTS
+========================= */
+
+async function loadReports() {
+
+    try {
+
+        const snapshot =
+            await get(
+                ref(db, "reports")
+            );
+
+
+        if (!snapshot.exists()) {
+
+            totalReports.textContent = "0";
+
+            resolvedReports.textContent = "0";
+
+            cleanlinessScore.textContent =
+                "0%";
+
+            reportsTable.innerHTML = `
+                <tr>
+                    <td
+                        colspan="7"
+                        class="empty"
+                    >
+                        No waste reports found.
+                    </td>
+                </tr>
+            `;
+
+            return;
+        }
+
+
+        const data =
+            snapshot.val();
+
+        const reports = [];
+
+        let resolved = 0;
+
+
+        Object.entries(data).forEach(
+            ([id, report]) => {
+
+                reports.push({
+                    id: id,
+                    ...report
+                });
+
+
+                if (
+                    String(report.status || "")
+                        .toLowerCase() === "resolved"
+                ) {
+
+                    resolved++;
+
+                }
+
+            }
+        );
+
+
+        /* NEWEST FIRST */
+
+        reports.sort(
+            (a, b) =>
+                new Date(
+                    b.createdAt || 0
+                ) -
+                new Date(
+                    a.createdAt || 0
+                )
+        );
+
+
+        /* STATS */
+
+        totalReports.textContent =
+            reports.length;
+
+        resolvedReports.textContent =
+            resolved;
+
+
+        /* CLEANLINESS SCORE */
+
+        const score =
+            reports.length > 0
+                ? Math.round(
+                    (resolved / reports.length) * 100
+                )
+                : 0;
+
+        cleanlinessScore.textContent =
+            score + "%";
+
+
+        /* TABLE */
+
+        reportsTable.innerHTML = "";
+
+
+        reports
+            .slice(0, 10)
+            .forEach(report => {
+
+                reportsTable.innerHTML +=
+                    createReportRow(report);
+
+            });
+
+
+    } catch (error) {
+
+        console.error(
+            "Reports error:",
+            error
+        );
+
+        reportsTable.innerHTML = `
+            <tr>
+                <td
+                    colspan="7"
+                    class="empty"
+                >
+                    Unable to load reports.
+                </td>
+            </tr>
+        `;
+
+    }
+
+}
+
+
+/* =========================
+   REPORT ROW
+========================= */
+
+function createReportRow(report) {
+
+    const reportId =
+        "ET-" +
+        report.id
+            .slice(-6)
+            .toUpperCase();
+
+
+    const status =
+        String(
+            report.status || "pending"
+        ).toLowerCase();
+
+
+    return `
+
+        <tr>
+
+            <td>
+                <strong>
+                    ${reportId}
+                </strong>
+            </td>
+
+            <td>
+                ${safe(report.category || "-")}
+            </td>
+
+            <td>
+                ${safe(report.location || "-")}
+            </td>
+
+            <td>
+                ${safe(report.area || "-")}
+            </td>
+
+            <td>
+                ${safe(report.severity || "-")}
+            </td>
+
+            <td>
+
+                <select
+                    id="reportStatus-${report.id}"
+                >
+
+                    <option
+                        value="pending"
+                        ${status === "pending"
+                            ? "selected"
+                            : ""}
+                    >
+                        Pending
+                    </option>
+
+                    <option
+                        value="reviewed"
+                        ${status === "reviewed"
+                            ? "selected"
+                            : ""}
+                    >
+                        Reviewed
+                    </option>
+
+                    <option
+                        value="in-progress"
+                        ${status === "in-progress"
+                            ? "selected"
+                            :
+                            /* =========================
+   RECENT ACTIVITY
+========================= */
+
+async function loadActivity() {
+
+    try {
+
+        const activities = [];
+
+
+        /* REPORTS */
+
+        const reportsSnapshot =
+            await get(
+                ref(db, "reports")
+            );
+
+
+        if (reportsSnapshot.exists()) {
+
+            const reports =
+                reportsSnapshot.val();
+
+
+            Object.entries(reports).forEach(
+                ([id, report]) => {
+
+                    activities.push({
+
+                        type: "report",
+
+                        title:
+                            "Waste report submitted",
+
+                        detail:
+                            report.category ||
+                            "Waste Report",
+
+                        time:
+                            report.createdAt || 0
+
+                    });
+
+                }
+            );
+
+        }
+
+
+        /* PICKUPS */
+
+        const pickupsSnapshot =
+            await get(
+                ref(db, "pickupRequests")
+            );
+
+
+        if (pickupsSnapshot.exists()) {
+
+            const pickups =
+                pickupsSnapshot.val();
+
+
+            Object.entries(pickups).forEach(
+                ([id, pickup]) => {
+
+                    activities.push({
+
+                        type: "pickup",
+
+                        title:
+                            "Pickup request submitted",
+
+                        detail:
+                            pickup.wasteType ||
+                            "Pickup Request",
+
+                        time:
+                            pickup.createdAt || 0
+
+                    });
+
+                }
+            );
+
+        }
+
+
+        /* SORT NEWEST FIRST */
+
+        activities.sort(
+            (a, b) =>
+                new Date(b.time) -
+                new Date(a.time)
+        );
+
+
+        activityList.innerHTML = "";
+
+
+        if (activities.length === 0) {
+
+            activityList.innerHTML = `
+                <div class="empty">
+                    No recent activity found.
+                </div>
+            `;
+
+            return;
+        }
+
+
+        /* SHOW LAST 6 */
+
+        activities
+            .slice(0, 6)
+            .forEach(activity => {
+
+                const icon =
+                    activity.type === "report"
+                        ? "📋"
+                        : "🚛";
+
+
+                activityList.innerHTML += `
+
+                    <div style="
+                        display:flex;
+                        align-items:center;
+                        gap:12px;
+                        padding:13px 0;
+                        border-bottom:1px solid #eeeeee;
+                    ">
+
+                        <div style="
+                            width:42px;
+                            height:42px;
+                            border-radius:10px;
+                            background:#e5f6eb;
+                            display:flex;
+                            align-items:center;
+                            justify-content:center;
+                            font-size:20px;
+                        ">
+                            ${icon}
+                        </div>
+
+                        <div>
+
+                            <strong>
+                                ${safe(activity.title)}
+                            </strong>
+
+                            <p style="
+                                margin-top:4px;
+                                color:#777;
+                                font-size:13px;
+                            ">
+                                ${safe(activity.detail)}
+                            </p>
+
+                        </div>
+
+                    </div>
+
+                `;
+
+            });
+
+
+    } catch (error) {
+
+        console.error(
+            "Activity error:",
+            error
+        );
+
+
+        activityList.innerHTML = `
+            <div class="empty">
+                Unable to load recent activity.
+            </div>
+        `;
+
+    }
+
+}
+
+
+/* =========================
+   SAFE TEXT
+========================= */
+
+function safe(value) {
+
+    return String(value ?? "")
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#039;");
+
+}
+
+
+/* =========================
+   SIDEBAR NAVIGATION
+========================= */
+
+window.goTop = function() {
+
+    window.scrollTo({
+        top: 0,
+        behavior: "smooth"
+    });
+
+};
+
+
+window.showReports = function() {
+
+    document
+        .getElementById("reportsSection")
+        .scrollIntoView({
+            behavior: "smooth"
+        });
+
+};
+
+
+window.showPickups = function() {
+
+    document
+        .getElementById("pickupsSection")
+        .scrollIntoView({
+            behavior: "smooth"
+        });
+
+};
+
+
+window.showActivity = function() {
+
+    document
+        .getElementById("activitySection")
+        .scrollIntoView({
+            behavior: "smooth"
+        });
+
+};
+
+
+/* =========================
+   LOGOUT
+========================= */
+
+logoutBtn.addEventListener(
+    "click",
+    async () => {
+
+        try {
+
+            await signOut(auth);
+
+            window.location.href =
+                "login.html";
+
+        } catch (error) {
+
+            console.error(
+                "Logout error:",
+                error
+            );
+
+            alert(
+                "Unable to logout. Please try again."
+            );
+
+        }
+
+    }
+);
+
+
+/* =========================
+   END
+========================= */
+
+</script>
+
+<script type="module" src="./admin-dashboard.js"></script>
+
+</body>
+
+</html>
